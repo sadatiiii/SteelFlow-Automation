@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order Admin Panel | TABCO</title>
+  <meta name="description" content="Simple order tracking admin panel for TABCO." />
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body data-page="admin">
+  <header class="topbar">
+    <a class="brand" href="../index.html" aria-label="Home">
+      <img src="../assets/logo.jpeg" alt="Tabco Logo" class="logo" />
+      <div>
+        <strong>TABCO</strong>
+        <p class="tagline" data-i18n="tagline">Strong Gratings, Smarter Projects</p>
+      </div>
+    </a>
+    <nav class="nav">
+      <a href="../index.html" data-i18n="nav_home">Home</a>
+      <a href="../privacy/" data-i18n="nav_privacy">Privacy</a>
+      <button id="langToggle" class="btn secondary" type="button">FA</button>
+    </nav>
+  </header>
+
+  <main class="section">
+    <h1 data-i18n="admin_title">Order Tracking Admin Panel</h1>
+    <p class="muted" data-i18n="admin_desc">
+      Manage orders, shipping stage, forwarder information, and tracking numbers.
+    </p>
+
+    <section class="card reveal">
+      <h2 data-i18n="admin_form_title">Add / Update Order</h2>
+      <form id="orderForm" class="grid-form">
+        <label>
+          <span data-i18n="f_order_id">Order ID</span>
+          <input name="id" required placeholder="ORD-001" />
+        </label>
+        <label>
+          <span data-i18n="f_customer">Customer Name</span>
+          <input name="customer" required />
+        </label>
+        <label>
+          <span data-i18n="f_phone">Phone</span>
+          <input name="phone" />
+        </label>
+        <label>
+          <span data-i18n="f_status">Shipping Stage</span>
+          <select name="status" required>
+            <option value="Pending" data-i18n="s_pending">Pending</option>
+            <option value="Production" data-i18n="s_production">Production</option>
+            <option value="Ready to Ship" data-i18n="s_ready">Ready to Ship</option>
+            <option value="In Transit" data-i18n="s_transit">In Transit</option>
+            <option value="Delivered" data-i18n="s_delivered">Delivered</option>
+          </select>
+        </label>
+        <label>
+          <span data-i18n="f_forwarder">Forwarder</span>
+          <input name="forwarder" placeholder="DHL / Aramex / ..." />
+        </label>
+        <label>
+          <span data-i18n="f_tracking">Tracking Number</span>
+          <input name="tracking" />
+        </label>
+        <label class="full">
+          <span data-i18n="f_note">Notes</span>
+          <textarea name="note" rows="3"></textarea>
+        </label>
+        <div class="full actions">
+          <button type="submit" class="btn" data-i18n="btn_save">Save Order</button>
+          <button type="button" id="clearOrders" class="btn danger" data-i18n="btn_clear_all">Clear All</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card reveal">
+      <div class="table-head">
+        <h2 data-i18n="admin_list_title">Registered Orders</h2>
+        <input id="orderSearch" type="search" placeholder="Search order/customer/tracking" />
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th data-i18n="f_order_id">Order ID</th>
+              <th data-i18n="f_customer">Customer</th>
+              <th data-i18n="f_phone">Phone</th>
+              <th data-i18n="f_status">Stage</th>
+              <th data-i18n="f_forwarder">Forwarder</th>
+              <th data-i18n="f_tracking">Tracking</th>
+              <th data-i18n="f_note">Notes</th>
+              <th data-i18n="th_updated">Updated</th>
+              <th data-i18n="th_actions">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="ordersTbody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© <span id="year"></span> TABCO</p>
+  </footer>
+
+  <script src="../script.js"></script>
+</body>
+</html>
