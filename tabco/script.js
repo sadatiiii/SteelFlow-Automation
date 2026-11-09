@@ -1,7 +1,8 @@
 (function () {
   const page = document.body?.dataset?.page || "home";
 
-  const N8N_FORM_URL = "https://n8n.tabcoyazd.ir/form-test/7904b9b5-4a2e-4b25-922d-0b1423843d0d";
+  // this variable no longer needed because it readed from env
+  // const N8N_FORM_URL = "https://n8n.tabcoyazd.ir/form-test/7904b9b5-4a2e-4b25-922d-0b1423843d0d";
 
   const i18n = {
     en: {
@@ -213,14 +214,27 @@
     elements.forEach((el) => observer.observe(el));
   }
 
-  function setupHome() {
-    const frame = document.getElementById("n8nFrame");
-    const link = document.getElementById("n8nDirectLink");
-    if (!frame || !link) return;
-
-    frame.src = N8N_FORM_URL;
-    link.href = N8N_FORM_URL;
+  async function loadConfig() {
+  try {
+    const res = await fetch("/api/config", { cache: "no-store" });
+    if (!res.ok) throw new Error("config failed");
+    return await res.json();
+  } catch {
+    return {};
   }
+}
+
+async function setupHome() {
+  const frame = document.getElementById("n8nFrame");
+  const link = document.getElementById("n8nDirectLink");
+  if (!frame || !link) return;
+
+  const { N8N_FORM_URL } = await loadConfig();
+  if (!N8N_FORM_URL) return;
+
+  frame.src = N8N_FORM_URL;
+  link.href = N8N_FORM_URL;
+}
 
   const STORAGE_KEY = "tabco_orders";
 
