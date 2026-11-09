@@ -1,7 +1,7 @@
 (function () {
   const page = document.body?.dataset?.page || "home";
 
-  const N8N_FORM_URL = "https://n8n.tabcoyazd.ir/form-test/7904b9b5-4a2e-4b25-922d-0b1423843d0d";
+  const N8N_FORM_URL = "https://tabcoyad.app.n8n.cloud/form-test/241eaf02-a739-4f69-b094-8876dbcc79a1";
 
   const i18n = {
     en: {
