@@ -1,159 +1,156 @@
-# SteelFlow Automation
-### Steel Trade Management & Automation System
+# TABCO — Digital Product Inquiry MVP
 
-An intelligent, web-based platform designed to streamline steel rebar trading, export operations, and business workflows through modern web technologies and workflow automation.
+**Academic project · Phase 1 business analysis and minimum viable product**
 
----
+TABCO is an industrial B2B product presentation and inquiry workflow for a manufacturer of special square bars used in the grating industry. The project digitizes the first part of the buyer journey: learning about the product, reviewing available specifications, and submitting a structured collaboration or purchase inquiry.
 
-## Overview
+> This repository contains the static website source. The n8n workflow and its external service configuration are operated separately and are not included in this repository.
 
-**SteelFlow Automation** is a software project focused on improving the efficiency of steel trading and export processes. The platform aims to provide a centralized digital environment for managing business operations, organizing customer interactions, and automating repetitive tasks.
+## Live project
 
-By combining a web-based interface with workflow automation, SteelFlow aims to reduce manual work, improve operational consistency, and establish a foundation for scalable business process management.
+- Website: https://tabcoyazd.ir/
+- Business analysis: https://tabcoyazd.ir/analysis.html
+- Source code: https://github.com/sadatiiii/SteelFlow-Automation
 
-## Project Objectives
+## Business problem and value proposition
 
-- Digitize steel rebar sales and export workflows.
-- Centralize business information and customer interactions.
-- Reduce repetitive manual operations through workflow automation.
-- Streamline business email processing and communication.
-- Support human review and approval before sending automated email responses.
-- Provide a modular foundation for future integrations and intelligent business tools.
+Industrial buyers may need to collect product information, confirm dimensions and availability, and communicate project requirements through calls, email, messaging apps, or intermediaries. When information is exchanged across separate channels, requests can be incomplete and follow-up may require repeated clarification.
 
-## Core Features
+TABCO provides a single public product page and a structured inquiry form. The intended value is clearer product discovery, more consistent initial request capture, and a more organized starting point for sales communication.
 
-> The following describes the project's intended capabilities. Features should be marked as implemented only after they have been developed and tested.
+**Evidence boundary:** These pain points are working business hypotheses, not quantified market findings. The repository does not contain documented customer interviews, market-size research, or measured conversion results. Field validation is a next step.
 
-- **Web Interface:** A centralized interface for presenting and managing steel trading operations.
-- **Business Workflow Automation:** Automation of repetitive tasks using n8n.
-- **Email Processing:** A foundation for organizing incoming business emails and preparing response drafts.
-- **Human-in-the-Loop Approval:** Review and approval of generated email responses before they are sent.
-- **Export-Oriented Workflow Design:** A structure designed around the needs of steel trading and export operations.
-- **Extensible Architecture:** A foundation for adding integrations, business modules, and intelligent automation features.
+## Idea classification
 
-## System Architecture
+The project is best classified as an **adaptive idea**: it applies existing web and workflow-automation technologies to improve an existing industrial product inquiry and sales process. It does not introduce a new physical product category or operate as an open marketplace.
 
-The system is designed around a modular architecture in which the web application and workflow automation layer can operate as separate components.
+## What is implemented in this repository
+
+| Component | Current implementation |
+|---|---|
+| Product website | Static HTML, CSS and vanilla JavaScript |
+| Product information | Available sizes and the currently supplied weight values |
+| Product media | Local product video and logo assets |
+| Inquiry form | n8n form embedded in the homepage, with a direct-link fallback |
+| Theme and language | Dark/light theme and Persian/English language controls |
+| Analysis dossier | Separate Persian page at `tabco/analysis.html` |
+| Demo order panel | Browser-local `localStorage` example; not a central order system |
+| Privacy page | Basic explanation of form data and third-party processing |
+
+## External workflow (operated separately)
+
+The intended and manually tested flow reported by the project developer is:
 
 ```text
-                 Business Users
-                       |
-                       v
-                 Web Interface
-                       |
-                       v
-              Business Operations
-                       |
-                       v
-              Workflow Automation
-                     (n8n)
-                       |
-            +----------+----------+
-            |                     |
-            v                     v
-      Email Processing      External Services
-            |
-            v
-       Human Review
-            |
-            v
-       Approved Reply
+Buyer
+  |
+  v
+TABCO product page and inquiry form
+  |
+  v
+n8n workflow (external to this repository)
+  |
+  +----> Google Sheets: inquiry record
+  |
+  +----> Email notification
+  |
+  +----> AI-assisted email draft
 ```
 
-*Note: This diagram represents the intended logical workflow. The final architecture depends on the components implemented in the current version.*
+The developer has reported manually testing form submission, Google Sheets writing, notification email delivery, and AI-assisted draft generation. These are developer-reported test results; the workflow definition is not committed here, so the individual n8n nodes and service configuration cannot be independently inspected from this repository.
 
-## Technology Stack
+Google Sheets is used as an external structured record store in the reported workflow. **This project does not currently implement a dedicated relational database.**
 
-The project is intended to integrate modern web development and automation technologies.
+The AI-assisted step prepares a draft; do not describe it as automatically sending a final commercial offer unless a human approval and sending step has been verified in the live workflow.
 
-| Component | Technology |
-|---|---|
-| Web application | Project-specific frontend framework |
-| Workflow automation | n8n |
-| Deployment | Docker |
-| Server infrastructure | Linux VPS |
-| Reverse proxy and HTTPS | Caddy |
-| Version control | Git and GitHub |
+## Online and offline boundary
 
-Additional backend, database, and API technologies can be documented as they are implemented.
+**Online:** product presentation, specification review, inquiry submission, workflow processing, inquiry recording, notifications, and draft preparation.
 
-## Getting Started
+**Offline:** final technical review, price and delivery confirmation, negotiation, manufacturing, quality control, packaging, loading, and shipping.
 
-### Prerequisites
+The website supports the commercial process; it does not replace physical production or final business agreements.
 
-- Git
-- Docker and Docker Compose
-- Node.js and npm, if required by the frontend
-- Access to the necessary external services and API credentials
+## Product information currently displayed
 
-### Installation
+- Available dimensions: 4×4, 5×5, 6×6, 8×8 and 10×10 mm.
+- Supplied weight information: 192 g/m² for 5×5 and 256 g/m² for 6×6.
+- Reported production capacity: one tonne in four hours.
 
-Clone the repository:
+These values are presented from the information supplied for the project. Confirm technical specifications and commercial availability with the business before relying on them for an order.
+
+## Repository structure
+
+```text
+.
+├── README.md
+├── AI_DISCLOSURE.md
+├── TESTING.md
+└── tabco/
+    ├── index.html
+    ├── analysis.html
+    ├── styles.css
+    ├── script.js
+    ├── assets/
+    │   ├── logo.jpeg
+    │   └── 1.mp4
+    ├── admin/
+    │   └── index.html
+    └── privacy/
+        └── index.html
+```
+
+## Run locally
+
+This is a static site; there is no package manager or build step in the repository.
+
+From the repository root, run any static HTTP server, for example:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/SteelFlow-Automation.git
-cd SteelFlow-Automation
+python3 -m http.server 8000 --directory tabco
 ```
 
-Follow the setup instructions for the relevant application components.
+Then open:
 
-If the project uses Docker Compose, start the configured services with:
+- http://localhost:8000/
+- http://localhost:8000/analysis.html
 
-```bash
-docker compose up -d
-```
+The inquiry form depends on the separately configured n8n service and may not behave like the production form in a local/offline environment.
 
-Inspect the running containers:
+## Deployment notes
 
-```bash
-docker compose ps
-```
+The website is deployed separately from the n8n workflow. The static site root is the `tabco/` directory. The repository does not currently include a Docker Compose file, a frontend build pipeline, or a GitHub Actions deployment workflow. Keep the existing hosting configuration when publishing changes.
 
-**Configuration:** Create the required environment configuration from the project's example configuration file, if available. Never commit real credentials, API keys, passwords, or production secrets to version control.
+The n8n form URL is configured in `tabco/script.js`. A public form endpoint is visible to website visitors by design; never place API keys, passwords, private tokens, or service credentials in frontend files.
 
-> The exact installation commands and environment variables should be updated to match the repository's actual directory structure and configuration files.
+## Known limitations and risks
 
-## Security & Reliability
+- Market demand and customer pain points have not yet been quantified through documented field research.
+- The n8n workflow is external to this repository and is not version-controlled here.
+- Google Sheets is an external storage service, not a relational database owned by this codebase.
+- The order panel under `/admin/` is a local demonstration using browser `localStorage`. It has no authentication and is not connected to the inquiry workflow or a shared database. Do not use it for real customer or shipment records.
+- The website does not process online payments.
+- Availability, pricing, production lead time, shipping, and final technical suitability require direct confirmation.
+- Third-party workflow, email, spreadsheet, and AI services introduce availability and configuration dependencies.
 
-Security and operational reliability are important considerations in the system's design.
+## Phase 1 presentation
 
-- Keep credentials and API keys outside the source code.
-- Restrict access to administrative interfaces and automation endpoints.
-- Require human approval for outgoing automated business emails.
-- Validate incoming data before processing it.
-- Use HTTPS for externally accessible services.
-- Configure backups and monitor deployed services.
+The public analysis dossier is available at `/analysis.html`. It covers:
 
-These practices should be verified against the actual implementation before being considered complete.
+1. Business introduction and value proposition.
+2. Customer problem and friction hypotheses.
+3. The eight idea-maturity questions.
+4. Adaptive-idea classification.
+5. Online/offline activity boundaries.
+6. Customer journey.
+7. MVP architecture and current implementation status.
+8. Limitations and validation work still required.
 
-## Project Roadmap
+## Project documentation
 
-- [ ] Establish the core web application structure.
-- [ ] Develop the steel trading and export interface.
-- [ ] Design and implement the required data model.
-- [ ] Configure n8n workflow automation.
-- [ ] Implement incoming email processing.
-- [ ] Add a human approval step for outgoing email responses.
-- [ ] Configure production deployment with Docker and HTTPS.
-- [ ] Add automated tests, error handling, and operational logging.
-- [ ] Document the implemented APIs and system architecture.
-
-## Academic Project
-
-SteelFlow Automation is developed as an applied software engineering project focused on business process digitization, web application development, and workflow automation.
-
-The project provides an opportunity to apply software architecture, deployment, integration, and automation concepts to a practical industrial business scenario.
-
-## Contributing
-
-Contributions, suggestions, and technical feedback are welcome. Proposed changes should be documented clearly and tested before being integrated into the project.
+- [AI use disclosure](AI_DISCLOSURE.md)
+- [Manual testing guide and current test status](TESTING.md)
 
 ## License
 
-A license has not yet been specified. Add an appropriate license before distributing or reusing the project publicly.
-
----
-
-**SteelFlow Automation**  
-*Connecting steel trading with smarter workflows.*
-
+No open-source license has been specified. All rights and reuse permissions remain with the repository owner unless a license is added.
