@@ -220,11 +220,8 @@
   }
 
   function setupHome() {
-    const frame = document.getElementById("n8nFrame");
     const link = document.getElementById("n8nDirectLink");
-    if (!frame || !link) return;
-
-    frame.src = N8N_FORM_URL;
+    if (!link) return;
     link.href = N8N_FORM_URL;
   }
 
