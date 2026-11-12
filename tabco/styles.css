@@ -8,3 +8,9 @@ html[dir="ltr"] body{font-family:Inter,'Segoe UI',Arial,sans-serif}html[dir="ltr
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}.reveal{opacity:1;transform:none}}
 /* Shared components retained for the admin and privacy pages */
 .card{background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:22px;margin:18px 0}.grid-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.grid-form label{display:flex;flex-direction:column;gap:6px}.grid-form .full{grid-column:1/-1}input,select,textarea{width:100%;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:11px;padding:11px 12px;font:inherit}textarea{resize:vertical}.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.table-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.table-wrap{overflow:auto;border:1px solid var(--border);border-radius:12px}table{width:100%;border-collapse:collapse;min-width:850px}th,td{border-bottom:1px solid var(--border);padding:11px;text-align:start;vertical-align:top}th{color:var(--muted);font-size:.82rem}td{font-size:.86rem}.btn.danger{background:#b93e3e;border-color:#b93e3e;color:white}.section>h1{font-size:clamp(1.8rem,4vw,2.8rem)}@media(max-width:600px){.grid-form{grid-template-columns:1fr}.grid-form .full{grid-column:auto}.table-head{align-items:stretch;flex-direction:column}.card{padding:15px}}
+
+/* Collaboration CTA: open the n8n form in a separate tab */
+.form-card{display:flex;flex-direction:column;align-items:stretch;gap:12px}
+.form-intro{color:var(--muted);font-size:.88rem;line-height:2;margin:0 0 8px}
+.collaboration-cta{width:100%;min-height:64px;padding:16px 24px;border-radius:16px;font-size:1.08rem;box-shadow:0 10px 28px color-mix(in srgb,var(--brand) 18%,transparent)}
+.form-footnote{margin:0;text-align:center;color:var(--muted);font-size:.72rem}
