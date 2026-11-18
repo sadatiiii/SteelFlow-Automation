@@ -30,7 +30,7 @@ LEADS_HEADERS = [
     "Lead_Status", "Opt_Out", "Notes",
 ]
 EMAIL_HEADERS = [
-    "Email_ID", "Lead_ID", "Email_Number", "Recipient", "Email_Subject",
+    "Email_ID", "Lead_ID", "Email_Number", "Recipient_Email", "Email_Subject",
     "Email_Body", "Send_Status", "Created_At", "Sent_At",
 ]
 
@@ -83,7 +83,8 @@ def ensure_headers(sheet, headers):
     if not existing:
         sheet.append_row(headers)
     elif existing != headers:
-        missing = [h for h in headers if h not in existing]
+        aliases = {"Recipient_Email": {"Recipient", "Recipient_Email"}} if sheet.title == "Emails" else {}
+        missing = [h for h in headers if h not in existing and not (aliases.get(h, set()) & set(existing))]
         if missing:
             raise HTTPException(500, f"Sheet {sheet.title} is missing columns: {', '.join(missing)}")
 
@@ -208,12 +209,12 @@ def create_draft(lead_id: str):
     created = datetime.now(timezone.utc).isoformat()
     append_record(emails, {
         "Email_ID": email_id, "Lead_ID": lead_id, "Email_Number": number,
-        "Recipient": lead["Contact_Email"], "Email_Subject": subject,
+        "Recipient_Email": lead["Contact_Email"], "Email_Subject": subject,
         "Email_Body": body, "Send_Status": "Draft", "Created_At": created,
         "Sent_At": "",
     })
     update_by_id(leads, "Lead_ID", lead_id, {"Lead_Status": "Pending_Approval"})
-    return {"draft": {"Email_ID": email_id, "Lead_ID": lead_id, "Email_Number": number, "Recipient": lead["Contact_Email"], "Email_Subject": subject, "Email_Body": body, "Send_Status": "Draft"}}
+    return {"draft": {"Email_ID": email_id, "Lead_ID": lead_id, "Email_Number": number, "Recipient_Email": lead["Contact_Email"], "Email_Subject": subject, "Email_Body": body, "Send_Status": "Draft"}}
 
 @app.get("/api/admin/drafts", dependencies=[Depends(require_admin)])
 def list_drafts():
@@ -241,7 +242,7 @@ def send_draft(email_id: str, request: SendRequest):
     msg = EmailMessage()
     msg["Subject"] = draft.get("Email_Subject", "")
     msg["From"] = os.getenv("SMTP_FROM", os.getenv("SMTP_USER", ""))
-    msg["To"] = draft.get("Recipient", "")
+    msg["To"] = draft.get("Recipient_Email", draft.get("Recipient", ""))
     msg.set_content(draft.get("Email_Body", ""))
     try:
         host = os.getenv("SMTP_HOST", "")
