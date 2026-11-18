@@ -169,7 +169,7 @@ Website: {lead.get('Website','')}
 Personalization note: {lead.get('Personalization_Note','')}
 Write 100-160 words, one low-pressure CTA, include TABCO Sales Team and https://tabcoyazd.ir/.
 Return only JSON with string keys email_subject and email_body."""
-    url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+    url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent"
     try:
         response = requests.post(
             url + "?key=" + api_key,
