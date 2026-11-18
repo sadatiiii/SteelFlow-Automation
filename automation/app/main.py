@@ -193,7 +193,7 @@ def list_leads():
     result = []
     for lead in rows_as_dicts(leads):
         email = lead.get("Contact_Email", "").strip()
-        if (valid_email(email) and lead.get("Opt_Out", "No").strip().lower() != "yes"
+        if (valid_email(email) and lead.get("Opt_Out", "").strip().lower() == "no"
                 and lead.get("Lead_Status", "").strip() == "New"
                 and lead.get("Lead_ID") not in sent_ids
                 and lead.get("Lead_ID") not in draft_ids):
@@ -206,7 +206,7 @@ def create_draft(lead_id: str):
     lead = next((r for r in rows_as_dicts(leads) if r.get("Lead_ID") == lead_id), None)
     if not lead:
         raise HTTPException(404, "Lead not found")
-    if lead.get("Lead_Status") != "New" or lead.get("Opt_Out", "No").lower() == "yes":
+    if lead.get("Lead_Status") != "New" or lead.get("Opt_Out", "").strip().lower() != "no":
         raise HTTPException(409, "Lead is not eligible")
     email_rows = rows_as_dicts(emails)
     if any(r.get("Lead_ID") == lead_id and r.get("Send_Status") in ("Sent", "Draft", "Pending_Approval") for r in email_rows):
