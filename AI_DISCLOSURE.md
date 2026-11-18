@@ -15,7 +15,7 @@ The website's existing layout, visual theme, and assets were retained as the pro
 
 ## AI in the business workflow
 
-The separately configured n8n workflow includes an AI-assisted step intended to prepare an email draft from inquiry information. The project developer has reported manually testing draft generation. The model provider, prompt, exact node configuration, and approval/send behavior must be documented from the live n8n workflow; they are not available in this source repository.
+The Python FastAPI service in `automation/` includes an AI-assisted step that generates an editable first-contact email draft from lead information. Gemini is called server-side. The draft is saved to Google Sheets and is displayed in `/admin/email-drafts.html`; a human can edit it and must explicitly confirm before SMTP sending. Runtime credentials are supplied through environment variables and are not committed.
 
 The AI step should be presented as draft preparation, not autonomous commercial approval or sending, unless the live workflow confirms otherwise.
 
