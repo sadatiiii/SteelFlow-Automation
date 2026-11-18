@@ -85,8 +85,9 @@ def ensure_headers(sheet, headers):
     elif existing != headers:
         aliases = {"Recipient_Email": {"Recipient", "Recipient_Email"}} if sheet.title == "Emails" else {}
         missing = [h for h in headers if h not in existing and not (aliases.get(h, set()) & set(existing))]
-        if missing:
-            raise HTTPException(500, f"Sheet {sheet.title} is missing columns: {', '.join(missing)}")
+        for header in missing:
+            sheet.update_cell(1, len(existing) + 1, header)
+            existing.append(header)
 
 def rows_as_dicts(sheet):
     values = sheet.get_all_values()
@@ -99,7 +100,14 @@ def append_record(sheet, record):
     headers = sheet.row_values(1)
     if not headers:
         raise HTTPException(500, f"Sheet {sheet.title} has no header row")
-    row = [record.get(header, "") for header in headers]
+    row = []
+    for header in headers:
+        if header == "Recipient_Email":
+            row.append(record.get("Recipient_Email", record.get("Recipient", "")))
+        elif header == "Recipient":
+            row.append(record.get("Recipient", record.get("Recipient_Email", "")))
+        else:
+            row.append(record.get(header, ""))
     sheet.append_row(row, value_input_option="USER_ENTERED")
 
 def update_by_id(sheet, id_column, record_id, updates):
