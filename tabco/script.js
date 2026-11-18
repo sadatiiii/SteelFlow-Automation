@@ -217,10 +217,6 @@
     elements.forEach((el) => observer.observe(el));
   }
 
-  function setupHome() {
-    // The collaboration form is now a first-party page at /inquiry/.
-  }
-
   const STORAGE_KEY = "tabco_orders";
 
   function loadOrders() {
@@ -356,7 +352,6 @@
     setupThemeToggle();
     setupReveal();
 
-    if (page === "home") setupHome();
     if (page === "admin") setupAdmin();
   }
 
