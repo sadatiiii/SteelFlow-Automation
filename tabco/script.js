@@ -1,8 +1,6 @@
 (function () {
   const page = document.body?.dataset?.page || "home";
 
-  const N8N_FORM_URL = "https://tabcoyad.app.n8n.cloud/form-test/241eaf02-a739-4f69-b094-8876dbcc79a1";
-
   const i18n = {
     en: {
       tagline: "Strong Gratings, Smarter Projects",
@@ -36,7 +34,7 @@
       privacy_h2_2: "2) Purpose of Use",
       privacy_p2: "Your data is used for customer communication, quotation preparation, order follow-up, and service quality improvement.",
       privacy_h2_3: "3) Third-Party Services",
-      privacy_p3: "Form processing may use n8n and Google Sheets. Their platform-level policies may also apply.",
+      privacy_p3: "Form processing uses the TABCO automation service and Google Sheets. Their platform-level policies may also apply.",
       privacy_h2_4: "4) Data Security",
       privacy_p4: "Do not submit passwords, payment details, identity documents, or other highly sensitive information through this demonstration form. Data handling depends on the connected third-party services and their configuration.",
       privacy_sensitive_title: "5) Sensitive Information",
@@ -90,7 +88,7 @@
       catalog_title: "نمایی از کاتالوگ",
       catalog_desc: "اطلاعات کلیدی محصول از کاتالوگ شما در تصویر زیر نمایش داده شده است.",
       collab_title: "مایل به همکاری هستید؟",
-      collab_desc: "فرم همکاری زیر را تکمیل کنید. اطلاعات از طریق فرم n8n دریافت شده و می‌تواند به Google Sheets منتقل شود.",
+      collab_desc: "فرم همکاری را تکمیل کنید. اطلاعات درخواست به‌صورت مستقیم در Google Sheets ثبت می‌شود.",
       n8n_note: "مهم: لینک فرم واقعی n8n را در فایل script.js (متغیر N8N_FORM_URL) جایگزین کنید.",
       fallback_label: "اگر فرم لود نشد، مستقیم باز کنید:",
       privacy_title: "قوانین و حریم خصوصی",
@@ -99,7 +97,7 @@
       privacy_h2_2: "۲) هدف استفاده از اطلاعات",
       privacy_p2: "اطلاعات شما برای ارتباط با مشتری، تهیه پیشنهاد قیمت، پیگیری سفارش و بهبود کیفیت خدمات استفاده می‌شود.",
       privacy_h2_3: "۳) سرویس‌های شخص ثالث",
-      privacy_p3: "پردازش فرم ممکن است از طریق n8n و Google Sheets انجام شود و قوانین این پلتفرم‌ها نیز اعمال می‌گردد.",
+      privacy_p3: "پردازش فرم از طریق سرویس اتوماسیون TABCO و Google Sheets انجام می‌شود و قوانین این پلتفرم‌ها نیز اعمال می‌گردد.",
       privacy_h2_4: "۴) امنیت داده‌ها",
       privacy_p4: "از ارسال رمز عبور، اطلاعات پرداخت، مدارک هویتی یا سایر اطلاعات بسیار حساس از طریق این فرم خودداری کنید. نحوه نگهداری و پردازش داده‌ها به تنظیمات سرویس‌های متصل وابسته است.",
       privacy_sensitive_title: "۵) اطلاعات حساس",
@@ -220,9 +218,7 @@
   }
 
   function setupHome() {
-    const link = document.getElementById("n8nDirectLink");
-    if (!link) return;
-    link.href = N8N_FORM_URL;
+    // The collaboration form is now a first-party page at /inquiry/.
   }
 
   const STORAGE_KEY = "tabco_orders";
