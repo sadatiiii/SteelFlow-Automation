@@ -39,22 +39,30 @@ The project is best classified as an **adaptive idea**: it applies existing web 
 
 ## Python automation workflow
 
-The intended and manually tested flow reported by the project developer is:
+The implemented flow is:
 
 ```text
 Buyer
   |
   v
-TABCO product page and inquiry form
+TABCO product page -> bilingual inquiry page
   |
   v
-Python FastAPI service in `automation/`
+Cloudflare Pages Function -> Python FastAPI (Docker)
   |
-  +----> Google Sheets: inquiry record
+  +----> Google Sheets: Leads
   |
-  
+  v
+Admin selects an eligible lead
   |
-  +----> AI-assisted email draft
+  v
+Gemini creates an editable draft -> Google Sheets: Emails
+  |
+  v
+Human reviews and edits the draft
+  |
+  v
+Explicit send approval -> SMTP -> update both Sheets tabs
 ```
 
 The API source is version-controlled in this repository. Runtime behavior still depends on configuring Google service-account access, a Gemini API key, SMTP credentials, an admin token, and a running Docker host. Those secrets are not committed.
