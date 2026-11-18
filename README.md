@@ -4,7 +4,7 @@
 
 TABCO is an industrial B2B product presentation and inquiry workflow for a manufacturer of special square bars used in the grating industry. The project digitizes the first part of the buyer journey: learning about the product, reviewing available specifications, and submitting a structured collaboration or purchase inquiry.
 
-> This repository contains the static website source. The n8n workflow and its external service configuration are operated separately and are not included in this repository.
+> This repository contains the static website source. The Python automation API is included under `automation/` and is designed to run in Docker. Cloudflare Pages Functions proxy browser requests to that API.
 
 ## Live project
 
@@ -31,13 +31,13 @@ The project is best classified as an **adaptive idea**: it applies existing web 
 | Product website | Static HTML, CSS and vanilla JavaScript |
 | Product information | Available sizes and the currently supplied weight values |
 | Product media | Local product video and logo assets |
-| Inquiry form | n8n form embedded in the homepage, with a direct-link fallback |
-| Theme and language | Dark/light theme and Persian/English language controls |
+| Inquiry form | Dedicated bilingual first-party page at `/inquiry/` |
+| Theme and language | Dark/light theme and Persian/English language controls, including the inquiry page |
 | Analysis dossier | Separate Persian page at `tabco/analysis.html` |
 | Demo order panel | Browser-local `localStorage` example; not a central order system |
 | Privacy page | Basic explanation of form data and third-party processing |
 
-## External workflow (operated separately)
+## Python automation workflow
 
 The intended and manually tested flow reported by the project developer is:
 
@@ -48,7 +48,7 @@ Buyer
 TABCO product page and inquiry form
   |
   v
-n8n workflow (external to this repository)
+Python FastAPI service in `automation/`
   |
   +----> Google Sheets: inquiry record
   |
@@ -57,11 +57,11 @@ n8n workflow (external to this repository)
   +----> AI-assisted email draft
 ```
 
-The developer has reported manually testing form submission, Google Sheets writing, notification email delivery, and AI-assisted draft generation. These are developer-reported test results; the workflow definition is not committed here, so the individual n8n nodes and service configuration cannot be independently inspected from this repository.
+The API source is version-controlled in this repository. Runtime behavior still depends on configuring Google service-account access, a Gemini API key, SMTP credentials, an admin token, and a running Docker host. Those secrets are not committed.
 
 Google Sheets is used as an external structured record store in the reported workflow. **This project does not currently implement a dedicated relational database.**
 
-The AI-assisted step prepares a draft; do not describe it as automatically sending a final commercial offer unless a human approval and sending step has been verified in the live workflow.
+The AI-assisted step prepares an editable draft. The admin page at `/admin/email-drafts.html` saves edits and requires a separate explicit confirmation before sending.
 
 ## Online and offline boundary
 
@@ -121,14 +121,14 @@ The inquiry form depends on the separately configured n8n service and may not be
 
 The website is deployed separately from the n8n workflow. The static site root is the `tabco/` directory. The repository does not currently include a Docker Compose file, a frontend build pipeline, or a GitHub Actions deployment workflow. Keep the existing hosting configuration when publishing changes.
 
-The n8n form URL is configured in `tabco/script.js`. A public form endpoint is visible to website visitors by design; never place API keys, passwords, private tokens, or service credentials in frontend files.
+Set `AUTOMATION_API_ORIGIN` in Cloudflare Pages to the base URL of the Docker API. Configure `GOOGLE_SERVICE_ACCOUNT_JSON`, `GOOGLE_SHEET_ID`, `GEMINI_API_KEY`, `ADMIN_TOKEN`, and SMTP values as secrets on the API host. Never put these credentials in frontend files.
 
 ## Known limitations and risks
 
 - Market demand and customer pain points have not yet been quantified through documented field research.
-- The n8n workflow is external to this repository and is not version-controlled here.
+- The Python API source is version-controlled, but it requires external secrets and an always-on Docker host.
 - Google Sheets is an external storage service, not a relational database owned by this codebase.
-- The order panel under `/admin/` is a local demonstration using browser `localStorage`. It has no authentication and is not connected to the inquiry workflow or a shared database. Do not use it for real customer or shipment records.
+- The order panel under `/admin/` remains a local demonstration using browser `localStorage`; it is separate from the new email-draft review page.
 - The website does not process online payments.
 - Availability, pricing, production lead time, shipping, and final technical suitability require direct confirmation.
 - Third-party workflow, email, spreadsheet, and AI services introduce availability and configuration dependencies.
