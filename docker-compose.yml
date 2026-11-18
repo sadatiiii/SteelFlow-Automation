@@ -1,8 +1,8 @@
 services:
   tabco-automation:
     build:
-      context: .
-      dockerfile: automation/Dockerfile
+      context: ./automation
+      dockerfile: Dockerfile
     container_name: tabco-automation
     restart: unless-stopped
     env_file:
