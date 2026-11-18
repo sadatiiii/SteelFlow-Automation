@@ -94,6 +94,13 @@ def rows_as_dicts(sheet):
     headers = values[0]
     return [dict(zip(headers, row + [""] * (len(headers) - len(row)))) for row in values[1:] if any(row)]
 
+def append_record(sheet, record):
+    headers = sheet.row_values(1)
+    if not headers:
+        raise HTTPException(500, f"Sheet {sheet.title} has no header row")
+    row = [record.get(header, "") for header in headers]
+    sheet.append_row(row, value_input_option="USER_ENTERED")
+
 def update_by_id(sheet, id_column, record_id, updates):
     values = sheet.get_all_values()
     if not values:
@@ -125,11 +132,15 @@ def submit_inquiry(data: Inquiry):
     if any((r.get("Contact_Email", "").strip().lower() == email and r.get("Lead_Status") != "Rejected") for r in existing):
         return {"ok": True, "message": "Your request has already been recorded."}
     lead_id = "WEB-" + uuid.uuid4().hex[:10].upper()
-    leads.append_row([
-        lead_id, data.company_name.strip(), data.website.strip(), data.country.strip(),
-        data.city.strip(), "", data.full_name.strip(), "", email, "",
-        data.phone.strip(), data.note.strip(), "Normal", "New", "No", "Website inquiry",
-    ], value_input_option="USER_ENTERED")
+    append_record(leads, {
+        "Lead_ID": lead_id, "Company_Name": data.company_name.strip(),
+        "Website": data.website.strip(), "Country": data.country.strip(),
+        "City": data.city.strip(), "Company_Description": "",
+        "Contact_Name": data.full_name.strip(), "Job_Title": "",
+        "Contact_Email": email, "LinkedIn_URL": "", "Phone": data.phone.strip(),
+        "Personalization_Note": data.note.strip(), "Priority": "Normal",
+        "Lead_Status": "New", "Opt_Out": "No", "Notes": "Website inquiry",
+    })
     return {"ok": True, "lead_id": lead_id}
 
 def generate_email(lead: dict[str, Any]) -> tuple[str, str]:
@@ -195,9 +206,20 @@ def create_draft(lead_id: str):
     email_id = "EM-" + uuid.uuid4().hex[:10].upper()
     number = 1 + sum(1 for r in email_rows if r.get("Lead_ID") == lead_id)
     created = datetime.now(timezone.utc).isoformat()
-    emails.append_row([email_id, lead_id, number, lead["Contact_Email"], subject, body, "Draft", created, ""])
+    append_record(emails, {
+        "Email_ID": email_id, "Lead_ID": lead_id, "Email_Number": number,
+        "Recipient": lead["Contact_Email"], "Email_Subject": subject,
+        "Email_Body": body, "Send_Status": "Draft", "Created_At": created,
+        "Sent_At": "",
+    })
     update_by_id(leads, "Lead_ID", lead_id, {"Lead_Status": "Pending_Approval"})
     return {"draft": {"Email_ID": email_id, "Lead_ID": lead_id, "Email_Number": number, "Recipient": lead["Contact_Email"], "Email_Subject": subject, "Email_Body": body, "Send_Status": "Draft"}}
+
+@app.get("/api/admin/drafts", dependencies=[Depends(require_admin)])
+def list_drafts():
+    _, emails = worksheets()
+    drafts = [r for r in rows_as_dicts(emails) if r.get("Send_Status") == "Draft"]
+    return {"drafts": drafts}
 
 @app.put("/api/admin/drafts/{email_id}", dependencies=[Depends(require_admin)])
 def edit_draft(email_id: str, data: DraftUpdate):
