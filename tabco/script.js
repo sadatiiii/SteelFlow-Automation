@@ -1,8 +1,6 @@
 (function () {
   const page = document.body?.dataset?.page || "home";
 
-  const N8N_FORM_URL = "https://tabcoyad.app.n8n.cloud/form-test/241eaf02-a739-4f69-b094-8876dbcc79a1";
-
   const i18n = {
     en: {
       tagline: "Strong Gratings, Smarter Projects",
@@ -27,8 +25,8 @@
       catalog_title: "Catalog Snapshot",
       catalog_desc: "Key product information from your catalog is shown below.",
       collab_title: "Interested in Working Together?",
-      collab_desc: "Fill in the collaboration form below. Submissions are handled by your n8n form workflow and can be pushed to Google Sheets.",
-      n8n_note: "Important: Replace the form URL in script.js (N8N_FORM_URL) with your real n8n form link.",
+      collab_desc: "Complete the collaboration form. Requests are recorded in Google Sheets.",
+      n8n_note: "The collaboration form is available on the dedicated TABCO inquiry page.",
       fallback_label: "If the form does not load, open it directly:",
       privacy_title: "Privacy Policy & Terms",
       privacy_h2_1: "1) Data Collection",
@@ -36,7 +34,7 @@
       privacy_h2_2: "2) Purpose of Use",
       privacy_p2: "Your data is used for customer communication, quotation preparation, order follow-up, and service quality improvement.",
       privacy_h2_3: "3) Third-Party Services",
-      privacy_p3: "Form processing may use n8n and Google Sheets. Their platform-level policies may also apply.",
+      privacy_p3: "Form processing uses the TABCO automation service and Google Sheets. Their platform-level policies may also apply.",
       privacy_h2_4: "4) Data Security",
       privacy_p4: "Do not submit passwords, payment details, identity documents, or other highly sensitive information through this demonstration form. Data handling depends on the connected third-party services and their configuration.",
       privacy_sensitive_title: "5) Sensitive Information",
@@ -90,8 +88,8 @@
       catalog_title: "نمایی از کاتالوگ",
       catalog_desc: "اطلاعات کلیدی محصول از کاتالوگ شما در تصویر زیر نمایش داده شده است.",
       collab_title: "مایل به همکاری هستید؟",
-      collab_desc: "فرم همکاری زیر را تکمیل کنید. اطلاعات از طریق فرم n8n دریافت شده و می‌تواند به Google Sheets منتقل شود.",
-      n8n_note: "مهم: لینک فرم واقعی n8n را در فایل script.js (متغیر N8N_FORM_URL) جایگزین کنید.",
+      collab_desc: "فرم همکاری را تکمیل کنید. اطلاعات درخواست به‌صورت مستقیم در Google Sheets ثبت می‌شود.",
+      n8n_note: "فرم همکاری در صفحه اختصاصی تابکو در دسترس است.",
       fallback_label: "اگر فرم لود نشد، مستقیم باز کنید:",
       privacy_title: "قوانین و حریم خصوصی",
       privacy_h2_1: "۱) جمع‌آوری اطلاعات",
@@ -99,7 +97,7 @@
       privacy_h2_2: "۲) هدف استفاده از اطلاعات",
       privacy_p2: "اطلاعات شما برای ارتباط با مشتری، تهیه پیشنهاد قیمت، پیگیری سفارش و بهبود کیفیت خدمات استفاده می‌شود.",
       privacy_h2_3: "۳) سرویس‌های شخص ثالث",
-      privacy_p3: "پردازش فرم ممکن است از طریق n8n و Google Sheets انجام شود و قوانین این پلتفرم‌ها نیز اعمال می‌گردد.",
+      privacy_p3: "پردازش فرم از طریق سرویس اتوماسیون TABCO و Google Sheets انجام می‌شود و قوانین این پلتفرم‌ها نیز اعمال می‌گردد.",
       privacy_h2_4: "۴) امنیت داده‌ها",
       privacy_p4: "از ارسال رمز عبور، اطلاعات پرداخت، مدارک هویتی یا سایر اطلاعات بسیار حساس از طریق این فرم خودداری کنید. نحوه نگهداری و پردازش داده‌ها به تنظیمات سرویس‌های متصل وابسته است.",
       privacy_sensitive_title: "۵) اطلاعات حساس",
@@ -135,10 +133,10 @@
 
   const homeTranslations = {
     en: {
-      tagline:"Industrial precision, made to perform", nav_specs:"Specifications", hero_eyebrow:"ENGINEERED FOR INDUSTRY", hero_title:"Special Square Bar<br>for Grating Industry", hero_desc:"Precision manufacturing, consistent quality, and flexible sizes for projects where every detail matters.", hero_cta:"Discuss Your Requirements", hero_specs:"Explore specifications", proof_title:"Custom manufacturing", proof_desc:"Sized around your project needs", video_label:"A closer look at the product", video_caption:"Quality in every section", video_subcaption:"Special square bar for grating industry", capacity:"1 tonne", capacity_desc:"Production capacity in 4 hours", metric_sizes:"Available sizes", metric_capacity:"Production in 4 hours", metric_range:"Product size range", metric_quality:"Focus on consistent quality", advantages_eyebrow:"WHY TABCO", advantages_title:"Made with attention to detail", advantages_desc:"From size selection to product consistency, your project needs stay at the center.", adv_1_title:"Consistent quality", adv_1_desc:"A focus on product consistency throughout manufacturing.", adv_2_title:"Custom production", adv_2_desc:"Choose a size that fits your project requirements.", adv_3_title:"Production capacity", adv_3_desc:"Capacity of one tonne in four hours.", specs_eyebrow:"TECHNICAL DETAILS", specs_title:"Dimensions & weight", specs_desc:"Explore available sizes. Listed weights refer to one square metre.", sizes_label:"Available sizes", sizes_title:"Choose dimensions", custom_size:"Available to order", grams:"g/m²", spec_note:"Weights for other sizes can be confirmed when requesting a quotation.", weight_eyebrow:"AVAILABLE WEIGHT DATA", weight_title:"Weight per square metre", weight_desc:"The values below reflect the product information currently provided.", grams_per_sqm:"grams / square metre", weight_note:"Contact sales for technical details and weight information for other sizes.", contact_eyebrow:"LET'S WORK TOGETHER", collab_title:"Ready for your next project.", collab_desc:"Contact us for more information, project requirements, or a collaboration request.", contact_point1:"Support with product enquiries", contact_point2:"Review of required sizes", form_title:"Collaboration request", form_desc:"Click the button below to submit a request.", form_intro:"To discuss a project or request more information, open the collaboration form.", form_footnote:"The form opens in a separate tab.", n8n_note:"To activate this form, add your live n8n form URL in script.js.", fallback_label:"If the form does not load:", fallback_link:"Submit a collaboration request", footer_text:"Special square bar for grating industry · Precision for industrial needs", nav_products:"Product", nav_about:"Advantages", nav_collab:"Contact", nav_privacy:"Privacy", nav_admin:"Admin", nav_home:"Home", nav_analysis:"Business Analysis"
+      tagline:"Industrial precision, made to perform", nav_specs:"Specifications", hero_eyebrow:"ENGINEERED FOR INDUSTRY", hero_title:"Special Square Bar<br>for Grating Industry", hero_desc:"Precision manufacturing, consistent quality, and flexible sizes for projects where every detail matters.", hero_cta:"Discuss Your Requirements", hero_specs:"Explore specifications", proof_title:"Custom manufacturing", proof_desc:"Sized around your project needs", video_label:"A closer look at the product", video_caption:"Quality in every section", video_subcaption:"Special square bar for grating industry", capacity:"1 tonne", capacity_desc:"Production capacity in 4 hours", metric_sizes:"Available sizes", metric_capacity:"Production in 4 hours", metric_range:"Product size range", metric_quality:"Focus on consistent quality", advantages_eyebrow:"WHY TABCO", advantages_title:"Made with attention to detail", advantages_desc:"From size selection to product consistency, your project needs stay at the center.", adv_1_title:"Consistent quality", adv_1_desc:"A focus on product consistency throughout manufacturing.", adv_2_title:"Custom production", adv_2_desc:"Choose a size that fits your project requirements.", adv_3_title:"Production capacity", adv_3_desc:"Capacity of one tonne in four hours.", specs_eyebrow:"TECHNICAL DETAILS", specs_title:"Dimensions & weight", specs_desc:"Explore available sizes. Listed weights refer to one square metre.", sizes_label:"Available sizes", sizes_title:"Choose dimensions", custom_size:"Available to order", grams:"g/m²", spec_note:"Weights for other sizes can be confirmed when requesting a quotation.", weight_eyebrow:"AVAILABLE WEIGHT DATA", weight_title:"Weight per square metre", weight_desc:"The values below reflect the product information currently provided.", grams_per_sqm:"grams / square metre", weight_note:"Contact sales for technical details and weight information for other sizes.", contact_eyebrow:"LET'S WORK TOGETHER", collab_title:"Ready for your next project.", collab_desc:"Contact us for more information, project requirements, or a collaboration request.", contact_point1:"Support with product enquiries", contact_point2:"Review of required sizes", form_title:"Collaboration request", form_desc:"Click the button below to submit a request.", form_intro:"To discuss a project or request more information, open the collaboration form.", form_footnote:"The form opens on a dedicated page.", n8n_note:"Open the dedicated inquiry page to submit a request.", fallback_label:"If the form does not load:", fallback_link:"Submit a collaboration request", footer_text:"Special square bar for grating industry · Precision for industrial needs", nav_products:"Product", nav_about:"Advantages", nav_collab:"Contact", nav_privacy:"Privacy", nav_admin:"Admin", nav_home:"Home", nav_analysis:"Business Analysis"
     },
     fa: {
-      tagline:"راهکار صنعتی، تولید دقیق", nav_specs:"مشخصات", hero_eyebrow:"ساخته‌شده برای صنعت", hero_title:"چارپهلوی ویژه<br>صنعت گریتینگ", hero_desc:"تولید دقیق، کیفیت یکنواخت و امکان سفارش در ابعاد متنوع؛ برای پروژه‌هایی که جزئیات در آن‌ها اهمیت دارد.", hero_cta:"درخواست مشاوره و سفارش", hero_specs:"مشاهده مشخصات", proof_title:"تولید سفارشی", proof_desc:"هماهنگ با نیاز پروژه شما", video_label:"نمای نزدیک از محصول", video_caption:"کیفیت در هر مقطع", video_subcaption:"چارپهلوی ویژه صنعت گریتینگ", capacity:"۱ تن", capacity_desc:"توان تولید در ۴ ساعت", metric_sizes:"سایز قابل تولید", metric_capacity:"توان تولید در ۴ ساعت", metric_range:"بازه ابعاد محصول", metric_quality:"تمرکز بر یکنواختی کیفیت", advantages_eyebrow:"چرا تابکو؟", advantages_title:"تولید با تمرکز بر جزئیات", advantages_desc:"از انتخاب ابعاد تا یکنواختی محصول، نیاز پروژه شما در مرکز توجه ماست.", adv_1_title:"کیفیت یکنواخت", adv_1_desc:"توجه به یکنواختی محصول در فرآیند تولید.", adv_2_title:"تولید سفارشی", adv_2_desc:"امکان انتخاب سایز متناسب با نیاز پروژه.", adv_3_title:"توان تولید بالا", adv_3_desc:"ظرفیت تولید یک تن در چهار ساعت.", specs_eyebrow:"اطلاعات فنی", specs_title:"ابعاد و وزن محصول", specs_desc:"ابعاد قابل تولید را بررسی کنید. وزن‌های اعلام‌شده مربوط به هر متر مربع هستند.", sizes_label:"سایزهای قابل تولید", sizes_title:"انتخاب ابعاد", custom_size:"قابل سفارش", grams:"گرم/مترمربع", spec_note:"وزن سایر سایزها در صورت نیاز، هنگام استعلام سفارش اعلام می‌شود.", weight_eyebrow:"وزن اسمی اعلام‌شده", weight_title:"وزن در هر متر مربع", weight_desc:"مقادیر زیر بر اساس اطلاعات فعلی محصول درج شده‌اند.", grams_per_sqm:"گرم / متر مربع", weight_note:"برای دریافت اطلاعات فنی و استعلام وزن سایر ابعاد، با واحد فروش در ارتباط باشید.", contact_eyebrow:"شروع یک همکاری", collab_title:"برای پروژه بعدی‌تان آماده‌ایم.", collab_desc:"برای دریافت اطلاعات بیشتر، بررسی نیاز پروژه یا ثبت درخواست همکاری با ما در ارتباط باشید.", contact_point1:"پاسخ‌گویی به درخواست سفارش", contact_point2:"بررسی سایزهای موردنیاز", form_title:"فرم درخواست همکاری", form_desc:"برای ثبت درخواست، روی دکمه زیر کلیک کنید.", form_intro:"برای شروع همکاری یا دریافت اطلاعات بیشتر، فرم درخواست را تکمیل کنید.", form_footnote:"فرم در صفحه‌ای جداگانه باز می‌شود.", n8n_note:"برای فعال شدن فرم، لینک واقعی فرم n8n را در فایل script.js وارد کنید.", fallback_label:"اگر فرم باز نشد:", fallback_link:"ثبت درخواست همکاری", footer_text:"چارپهلوی ویژه صنعت گریتینگ · تولید دقیق برای نیازهای صنعتی", nav_products:"محصول", nav_about:"مزایا", nav_collab:"درخواست همکاری", nav_privacy:"حریم خصوصی", nav_admin:"مدیریت", nav_home:"خانه", nav_analysis:"تحلیل کسب‌وکار"
+      tagline:"راهکار صنعتی، تولید دقیق", nav_specs:"مشخصات", hero_eyebrow:"ساخته‌شده برای صنعت", hero_title:"چارپهلوی ویژه<br>صنعت گریتینگ", hero_desc:"تولید دقیق، کیفیت یکنواخت و امکان سفارش در ابعاد متنوع؛ برای پروژه‌هایی که جزئیات در آن‌ها اهمیت دارد.", hero_cta:"درخواست مشاوره و سفارش", hero_specs:"مشاهده مشخصات", proof_title:"تولید سفارشی", proof_desc:"هماهنگ با نیاز پروژه شما", video_label:"نمای نزدیک از محصول", video_caption:"کیفیت در هر مقطع", video_subcaption:"چارپهلوی ویژه صنعت گریتینگ", capacity:"۱ تن", capacity_desc:"توان تولید در ۴ ساعت", metric_sizes:"سایز قابل تولید", metric_capacity:"توان تولید در ۴ ساعت", metric_range:"بازه ابعاد محصول", metric_quality:"تمرکز بر یکنواختی کیفیت", advantages_eyebrow:"چرا تابکو؟", advantages_title:"تولید با تمرکز بر جزئیات", advantages_desc:"از انتخاب ابعاد تا یکنواختی محصول، نیاز پروژه شما در مرکز توجه ماست.", adv_1_title:"کیفیت یکنواخت", adv_1_desc:"توجه به یکنواختی محصول در فرآیند تولید.", adv_2_title:"تولید سفارشی", adv_2_desc:"امکان انتخاب سایز متناسب با نیاز پروژه.", adv_3_title:"توان تولید بالا", adv_3_desc:"ظرفیت تولید یک تن در چهار ساعت.", specs_eyebrow:"اطلاعات فنی", specs_title:"ابعاد و وزن محصول", specs_desc:"ابعاد قابل تولید را بررسی کنید. وزن‌های اعلام‌شده مربوط به هر متر مربع هستند.", sizes_label:"سایزهای قابل تولید", sizes_title:"انتخاب ابعاد", custom_size:"قابل سفارش", grams:"گرم/مترمربع", spec_note:"وزن سایر سایزها در صورت نیاز، هنگام استعلام سفارش اعلام می‌شود.", weight_eyebrow:"وزن اسمی اعلام‌شده", weight_title:"وزن در هر متر مربع", weight_desc:"مقادیر زیر بر اساس اطلاعات فعلی محصول درج شده‌اند.", grams_per_sqm:"گرم / متر مربع", weight_note:"برای دریافت اطلاعات فنی و استعلام وزن سایر ابعاد، با واحد فروش در ارتباط باشید.", contact_eyebrow:"شروع یک همکاری", collab_title:"برای پروژه بعدی‌تان آماده‌ایم.", collab_desc:"برای دریافت اطلاعات بیشتر، بررسی نیاز پروژه یا ثبت درخواست همکاری با ما در ارتباط باشید.", contact_point1:"پاسخ‌گویی به درخواست سفارش", contact_point2:"بررسی سایزهای موردنیاز", form_title:"فرم درخواست همکاری", form_desc:"برای ثبت درخواست، روی دکمه زیر کلیک کنید.", form_intro:"برای شروع همکاری یا دریافت اطلاعات بیشتر، فرم درخواست را تکمیل کنید.", form_footnote:"فرم در صفحه اختصاصی تابکو باز می‌شود.", n8n_note:"برای ثبت درخواست، صفحه اختصاصی فرم همکاری را باز کنید.", fallback_label:"اگر فرم باز نشد:", fallback_link:"ثبت درخواست همکاری", footer_text:"چارپهلوی ویژه صنعت گریتینگ · تولید دقیق برای نیازهای صنعتی", nav_products:"محصول", nav_about:"مزایا", nav_collab:"درخواست همکاری", nav_privacy:"حریم خصوصی", nav_admin:"مدیریت", nav_home:"خانه", nav_analysis:"تحلیل کسب‌وکار"
     }
   };
 
@@ -217,12 +215,6 @@
       { threshold: 0.12 }
     );
     elements.forEach((el) => observer.observe(el));
-  }
-
-  function setupHome() {
-    const link = document.getElementById("n8nDirectLink");
-    if (!link) return;
-    link.href = N8N_FORM_URL;
   }
 
   const STORAGE_KEY = "tabco_orders";
@@ -360,7 +352,6 @@
     setupThemeToggle();
     setupReveal();
 
-    if (page === "home") setupHome();
     if (page === "admin") setupAdmin();
   }
 

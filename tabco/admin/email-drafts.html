@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="fa" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>بازبینی ایمیل‌ها | TABCO</title>
+  <link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="drafts.css">
+</head>
+<body data-page="drafts">
+<header class="topbar glass">
+  <a class="brand" href="../index.html"><img src="../assets/logo.jpeg" alt="TABCO" class="logo"><div><strong>TABCO<span class="brand-dot">.</span></strong><p class="tagline">مدیریت ارتباط با مشتری</p></div></a>
+  <nav class="nav"><a href="../index.html" data-t="home">خانه</a><button id="themeToggle" class="icon-btn" type="button">☼</button><button id="langToggle" class="btn secondary lang-btn" type="button">EN</button></nav>
+</header>
+<main class="section drafts-main">
+  <div class="drafts-title"><span class="eyebrow" data-t="eyebrow">کنترل انسانی قبل از ارسال</span><h1 data-t="title">پیش‌نویس ایمیل‌ها</h1><p data-t="intro">ایمیل تولیدشده را بررسی و ویرایش کن؛ هیچ ایمیلی بدون تأیید صریح تو ارسال نمی‌شود.</p></div>
+  <section class="card auth-card" id="authPanel">
+    <label><span data-t="token">کلید دسترسی مدیر</span><input id="adminToken" type="password" autocomplete="current-password"></label>
+    <button class="btn" id="connectButton" type="button" data-t="connect">اتصال</button>
+    <p class="muted" data-t="tokenNote">این کلید فقط در حافظه نشست همین مرورگر نگهداری می‌شود.</p>
+  </section>
+  <div id="workspace" hidden>
+    <section class="card">
+      <div class="table-head"><div><h2 data-t="eligible">مخاطبان آماده تهیه پیش‌نویس</h2><p class="muted" data-t="eligibleDesc">فقط سرنخ‌های جدید و دارای ایمیل معتبر نمایش داده می‌شوند.</p></div><button class="btn secondary" id="refreshLeads" type="button" data-t="refresh">بروزرسانی</button></div>
+      <div id="leadList" class="lead-list"></div>
+    </section>
+    <section class="card" id="editorCard" hidden>
+      <h2 data-t="editor">ویرایش پیش‌نویس</h2>
+      <p class="muted" id="draftMeta"></p>
+      <label><span data-t="recipient">گیرنده</span><input id="draftRecipient" readonly></label>
+      <label><span data-t="subject">موضوع ایمیل</span><input id="draftSubject" maxlength="240"></label>
+      <label><span data-t="body">متن ایمیل</span><textarea id="draftBody" rows="13"></textarea></label>
+      <div class="actions"><button class="btn secondary" id="saveDraft" type="button" data-t="save">ذخیره تغییرات</button><button class="btn" id="sendDraft" type="button" data-t="send">تأیید و ارسال ایمیل</button></div>
+      <p id="editorStatus" class="form-status" role="status"></p>
+    </section>
+    <section class="card">
+      <div class="table-head"><h2 data-t="savedDrafts">پیش‌نویس‌های ذخیره‌شده</h2><button class="btn secondary" id="refreshDrafts" type="button" data-t="refresh">بروزرسانی</button></div>
+      <div id="draftList" class="lead-list"></div>
+    </section>
+  </div>
+</main>
+<footer class="footer"><a class="footer-brand" href="../index.html">TABCO<span class="brand-dot">.</span></a><p>© <span id="year"></span> TABCO</p></footer>
+<script src="drafts.js"></script>
+</body></html>

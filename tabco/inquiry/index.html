@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fa" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101714">
+  <title>فرم درخواست همکاری | TABCO</title>
+  <meta name="description" content="فرم تماس و درخواست همکاری با TABCO">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="inquiry.css">
+</head>
+<body data-page="inquiry">
+  <header class="topbar glass inquiry-topbar">
+    <a class="brand" href="../index.html">
+      <img src="../assets/logo.jpeg" alt="TABCO" class="logo">
+      <div><strong>TABCO<span class="brand-dot">.</span></strong><p class="tagline">راهکار صنعتی، تولید دقیق</p></div>
+    </a>
+    <nav class="nav">
+      <a href="../index.html" data-t="home">خانه</a>
+      <button id="themeToggle" class="icon-btn" type="button" aria-label="Toggle theme">☼</button>
+      <button id="langToggle" class="btn secondary lang-btn" type="button">EN</button>
+    </nav>
+  </header>
+
+  <main class="section inquiry-main">
+    <a class="text-link back-link" href="../index.html">← <span data-t="back">بازگشت به سایت</span></a>
+    <section class="inquiry-shell glass">
+      <div class="inquiry-heading">
+        <span class="eyebrow" data-t="eyebrow">شروع یک همکاری</span>
+        <h1 data-t="title">فرم درخواست همکاری</h1>
+        <p data-t="intro">برای بررسی درخواست شما، اطلاعات زیر را تکمیل کنید. همکاران ما پس از بررسی با شما ارتباط می‌گیرند.</p>
+      </div>
+
+      <form id="inquiryForm" class="inquiry-form">
+        <label><span data-t="fullName">نام و نام خانوادگی *</span><input name="full_name" required minlength="2" maxlength="120" autocomplete="name"></label>
+        <label><span data-t="company">نام شرکت *</span><input name="company_name" required minlength="2" maxlength="160" autocomplete="organization"></label>
+        <label><span data-t="email">آدرس ایمیل *</span><input name="email" type="email" required autocomplete="email"></label>
+        <label><span data-t="phone">شماره تماس</span><input name="phone" type="tel" maxlength="50" autocomplete="tel"></label>
+        <label><span data-t="country">کشور</span><input name="country" maxlength="100" autocomplete="country-name"></label>
+        <label><span data-t="city">شهر</span><input name="city" maxlength="100" autocomplete="address-level2"></label>
+        <label class="full"><span data-t="website">وب‌سایت شرکت</span><input name="website" type="url" maxlength="300" placeholder="https://"></label>
+        <label class="full"><span data-t="note">توضیحات / نیاز پروژه</span><textarea name="note" rows="5" maxlength="3000"></textarea></label>
+        <button class="btn inquiry-submit" type="submit" id="submitButton" data-t="submit">ارسال درخواست <span>↗</span></button>
+        <p id="formStatus" class="form-status" role="status" aria-live="polite"></p>
+      </form>
+      <p class="inquiry-foot" data-t="foot">اطلاعات شما فقط برای بررسی و پیگیری درخواست همکاری استفاده می‌شود.</p>
+    </section>
+  </main>
+
+  <footer class="footer"><a class="footer-brand" href="../index.html">TABCO<span class="brand-dot">.</span></a><p>© <span id="year"></span> TABCO</p><a href="../privacy/" class="text-link" data-t="privacy">حریم خصوصی</a></footer>
+  <script src="inquiry.js"></script>
+</body>
+</html>
