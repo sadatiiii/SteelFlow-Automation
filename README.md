@@ -52,14 +52,14 @@ Python FastAPI service in `automation/`
   |
   +----> Google Sheets: inquiry record
   |
-  +----> Email notification
+  
   |
   +----> AI-assisted email draft
 ```
 
 The API source is version-controlled in this repository. Runtime behavior still depends on configuring Google service-account access, a Gemini API key, SMTP credentials, an admin token, and a running Docker host. Those secrets are not committed.
 
-Google Sheets is used as an external structured record store in the reported workflow. **This project does not currently implement a dedicated relational database.**
+Google Sheets is used as the external structured record store. **This project does not currently implement a dedicated relational database.**
 
 The AI-assisted step prepares an editable draft. The admin page at `/admin/email-drafts.html` saves edits and requires a separate explicit confirmation before sending.
 
@@ -115,11 +115,11 @@ Then open:
 - http://localhost:8000/
 - http://localhost:8000/analysis.html
 
-The inquiry form depends on the separately configured n8n service and may not behave like the production form in a local/offline environment.
+The inquiry form requires the Python API to be running and configured with Google Sheets access.
 
 ## Deployment notes
 
-The website is deployed separately from the n8n workflow. The static site root is the `tabco/` directory. The repository does not currently include a Docker Compose file, a frontend build pipeline, or a GitHub Actions deployment workflow. Keep the existing hosting configuration when publishing changes.
+The static website and Python API are deployed separately. The static site root is the `tabco/` directory. The Python API includes a Dockerfile; the static site remains build-step-free. Keep the existing Cloudflare Pages root directory (`tabco/`) when publishing changes. Keep the existing hosting configuration when publishing changes.
 
 Set `AUTOMATION_API_ORIGIN` in Cloudflare Pages to the base URL of the Docker API. Configure `GOOGLE_SERVICE_ACCOUNT_JSON`, `GOOGLE_SHEET_ID`, `GEMINI_API_KEY`, `ADMIN_TOKEN`, and SMTP values as secrets on the API host. Never put these credentials in frontend files.
 
