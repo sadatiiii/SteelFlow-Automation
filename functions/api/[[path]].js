@@ -126,6 +126,22 @@ export async function onRequest({ request, env }) {
       return json({ ok: true, leads: result.results || [] });
     }
 
+    if (route[0] === "leads" && route.length === 1 && method === "POST") {
+      const input = await body();
+      const company = clean(input.company_name,160);
+      if (company.length < 2) return json({ ok: false, error: "نام شرکت الزامی است." }, 400);
+      const leadId = id("LEAD"), now = new Date().toISOString();
+      await db.prepare(`INSERT INTO leads
+        (lead_id, company_name, website, country, city, contact_name, job_title, contact_email, phone, personalization_note, priority, lead_status, opt_out, notes, created_at, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+        .bind(leadId, company, clean(input.website,300), clean(input.country,100), clean(input.city,100),
+          clean(input.contact_name,160), clean(input.job_title,120), clean(input.contact_email,254),
+          clean(input.phone,50), clean(input.personalization_note,3000), clean(input.priority,40)||"Normal",
+          clean(input.lead_status,60)||"New", clean(input.opt_out,10)||"No", clean(input.notes,3000), now, now).run();
+      await logActivity(db, { lead_id: leadId, activity_type: "Lead created", contact_channel: "Admin", message_summary: "Customer record created", outcome: "Saved" });
+      return json({ ok: true, lead_id: leadId }, 201);
+    }
+
     if (route[0] === "leads" && route.length === 2 && method === "GET") {
       const leadId = route[1];
       const [lead, orders, emails, activities] = await Promise.all([
