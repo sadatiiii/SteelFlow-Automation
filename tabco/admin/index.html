@@ -1,111 +1,121 @@
 <!doctype html>
-<html lang="en" dir="ltr">
+<html lang="fa" dir="rtl" data-theme="dark">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Order Admin Panel | TABCO</title>
-  <meta name="description" content="Simple order tracking admin panel for TABCO." />
-  <link rel="stylesheet" href="../styles.css" />
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>مرکز مدیریت TABCO</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="admin.css">
 </head>
-<body data-page="admin">
-  <header class="topbar">
-    <a class="brand" href="../index.html" aria-label="Home">
-      <img src="../assets/logo.jpeg" alt="Tabco Logo" class="logo" />
-      <div>
-        <strong>TABCO</strong>
-        <p class="tagline" data-i18n="tagline">Strong Gratings, Smarter Projects</p>
+<body class="admin-app" data-page="admin" data-default-tab="overview">
+  <div class="admin-shell">
+    <aside class="sidebar">
+      <a class="admin-brand" href="../index.html"><img src="../assets/logo.jpeg" alt="TABCO"><span><b>TABCO</b><small>مرکز مدیریت</small></span></a>
+      <div class="side-caption">WORKSPACE</div>
+      <nav class="side-nav" aria-label="مدیریت">
+        <button class="side-link active" data-tab="overview"><i>◫</i> نمای کلی</button>
+        <button class="side-link" data-tab="leads"><i>◎</i> مشتری‌ها و سرنخ‌ها</button>
+        <button class="side-link" data-tab="orders"><i>▤</i> سفارش‌ها</button>
+        <button class="side-link" data-tab="emails"><i>✉</i> ایمیل‌ها</button>
+        <button class="side-link" data-tab="activity"><i>↗</i> تاریخچه فعالیت‌ها</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <span class="db-indicator"><i></i> پایگاه داده مرکزی</span>
+        <a href="../index.html">مشاهده وب‌سایت ↗</a>
       </div>
-    </a>
-    <nav class="nav">
-      <a href="../index.html" data-i18n="nav_home">Home</a>
-      <a href="../analysis.html" data-i18n="nav_analysis">Business Analysis</a>
-      <a href="../privacy/" data-i18n="nav_privacy">Privacy</a>
-      <a href="email-drafts.html">Email drafts</a>
-      <button id="langToggle" class="btn secondary" type="button">FA</button>
-    </nav>
-  </header>
+    </aside>
 
-  <main class="section">
-    <h1 data-i18n="admin_title">Order Tracking Admin Panel</h1>
-    <p class="muted" data-i18n="admin_desc">
-      Demonstration only. Records are stored in this browser and are not connected to a central order database.
-    </p>
-    <div class="notice" role="note">هشدار: این صفحه احراز هویت ندارد و داده‌ها فقط در localStorage همین مرورگر ذخیره می‌شوند. برای ثبت اطلاعات واقعی مشتری یا سفارش استفاده نکنید.</div>
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <div><span class="eyebrow">TABCO / MANAGEMENT</span><h1 id="pageTitle">نمای کلی</h1></div>
+        <div class="top-actions"><span class="admin-user" id="adminUser">مدیر</span><button class="btn-quiet" id="logoutBtn" hidden>خروج</button></div>
+      </header>
 
-    <section class="card reveal">
-      <h2 data-i18n="admin_form_title">Add / Update Order</h2>
-      <form id="orderForm" class="grid-form">
-        <label>
-          <span data-i18n="f_order_id">Order ID</span>
-          <input name="id" required placeholder="ORD-001" />
-        </label>
-        <label>
-          <span data-i18n="f_customer">Customer Name</span>
-          <input name="customer" required />
-        </label>
-        <label>
-          <span data-i18n="f_phone">Phone</span>
-          <input name="phone" />
-        </label>
-        <label>
-          <span data-i18n="f_status">Shipping Stage</span>
-          <select name="status" required>
-            <option value="Pending" data-i18n="s_pending">Pending</option>
-            <option value="Production" data-i18n="s_production">Production</option>
-            <option value="Ready to Ship" data-i18n="s_ready">Ready to Ship</option>
-            <option value="In Transit" data-i18n="s_transit">In Transit</option>
-            <option value="Delivered" data-i18n="s_delivered">Delivered</option>
-          </select>
-        </label>
-        <label>
-          <span data-i18n="f_forwarder">Forwarder</span>
-          <input name="forwarder" placeholder="DHL / Aramex / ..." />
-        </label>
-        <label>
-          <span data-i18n="f_tracking">Tracking Number</span>
-          <input name="tracking" />
-        </label>
-        <label class="full">
-          <span data-i18n="f_note">Notes</span>
-          <textarea name="note" rows="3"></textarea>
-        </label>
-        <div class="full actions">
-          <button type="submit" class="btn" data-i18n="btn_save">Save Order</button>
-          <button type="button" id="clearOrders" class="btn danger" data-i18n="btn_clear_all">Clear All</button>
+      <section class="auth-screen" id="authScreen" hidden>
+        <div class="auth-box">
+          <div class="auth-mark">T.</div>
+          <span class="eyebrow">SECURE WORKSPACE</span>
+          <h2 id="authTitle">ورود به مرکز مدیریت</h2>
+          <p id="authDescription">برای دسترسی به اطلاعات مشتریان و سفارش‌ها وارد شوید.</p>
+          <form id="loginForm">
+            <label>نام کاربری<input name="username" autocomplete="username" required></label>
+            <label>رمز عبور<input name="password" type="password" autocomplete="current-password" required></label>
+            <button class="btn-primary" type="submit">ورود به پنل</button>
+          </form>
+          <div id="setupBox" hidden>
+            <div class="auth-divider">راه‌اندازی اولیه مدیر</div>
+            <p>هنوز حساب مدیریتی ساخته نشده است. برای ساخت اولین حساب، کلید راه‌اندازی محرمانه را وارد کنید.</p>
+            <form id="setupForm">
+              <label>کلید راه‌اندازی<input name="setup_key" type="password" required></label>
+              <label>نام کاربری مدیر<input name="username" autocomplete="username" required></label>
+              <label>رمز عبور جدید (حداقل ۱۲ کاراکتر)<input name="password" type="password" minlength="12" required></label>
+              <button class="btn-primary" type="submit">ساخت حساب مدیر</button>
+            </form>
+          </div>
+          <p class="auth-error" id="authError" role="status"></p>
         </div>
-      </form>
-    </section>
+      </section>
 
-    <section class="card reveal">
-      <div class="table-head">
-        <h2 data-i18n="admin_list_title">Registered Orders</h2>
-        <input id="orderSearch" type="search" placeholder="Search order/customer/tracking" />
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th data-i18n="f_order_id">Order ID</th>
-              <th data-i18n="f_customer">Customer</th>
-              <th data-i18n="f_phone">Phone</th>
-              <th data-i18n="f_status">Stage</th>
-              <th data-i18n="f_forwarder">Forwarder</th>
-              <th data-i18n="f_tracking">Tracking</th>
-              <th data-i18n="f_note">Notes</th>
-              <th data-i18n="th_updated">Updated</th>
-              <th data-i18n="th_actions">Actions</th>
-            </tr>
-          </thead>
-          <tbody id="ordersTbody"></tbody>
-        </table>
-      </div>
-    </section>
-  </main>
+      <section class="app-content" id="appContent" hidden>
+        <div class="view active" id="view-overview">
+          <div class="welcome-row"><div><h2>سلام، به مرکز عملیات TABCO خوش آمدی.</h2><p>اطلاعات مشتری‌ها، سفارش‌ها و ارتباطات در یک پایگاه داده مشترک مدیریت می‌شوند.</p></div><span class="live-pill"><i></i> همگام با D1</span></div>
+          <div class="stats-grid">
+            <article class="stat-card"><span>کل مشتری‌ها</span><b id="statLeads">—</b><small>تمام سرنخ‌های ثبت‌شده</small></article>
+            <article class="stat-card"><span>سفارش‌های فعال</span><b id="statOrders">—</b><small>سفارش‌های بایگانی‌نشده</small></article>
+            <article class="stat-card"><span>پیش‌نویس ایمیل</span><b id="statDrafts">—</b><small>نیازمند بازبینی مدیر</small></article>
+            <article class="stat-card"><span>ایمیل‌های ارسال‌شده</span><b id="statSent">—</b><small>سوابق ارسال ثبت‌شده</small></article>
+          </div>
+          <section class="panel"><div class="panel-heading"><div><span class="eyebrow">LATEST UPDATES</span><h3>آخرین فعالیت‌ها</h3></div><button class="text-button" data-go="activity">مشاهده همه ←</button></div><div id="recentActivity" class="activity-list"></div></section>
+        </div>
 
-  <footer class="footer">
-    <p>© <span id="year"></span> TABCO · Local demonstration only</p>
-  </footer>
+        <div class="view" id="view-leads">
+          <div class="toolbar"><div><span class="eyebrow">CUSTOMER RELATIONSHIP</span><h2>مشتری‌ها و سرنخ‌ها</h2><p>تمام مشتری‌ها، با هر وضعیت و از هر کانال ورودی.</p></div><input id="leadSearch" class="search-input" type="search" placeholder="جستجوی شرکت، مخاطب، ایمیل یا تلفن…"></div>
+          <section class="panel table-panel"><div class="table-scroll"><table><thead><tr><th>شرکت</th><th>مخاطب</th><th>ایمیل</th><th>وضعیت</th><th>سفارش</th><th>آخرین بروزرسانی</th><th></th></tr></thead><tbody id="leadsTable"></tbody></table></div></section>
+          <section class="panel detail-panel" id="leadDetail" hidden></section>
+        </div>
 
-  <script src="../script.js"></script>
-</body>
-</html>
+        <div class="view" id="view-orders">
+          <div class="toolbar"><div><span class="eyebrow">ORDER OPERATIONS</span><h2>مدیریت سفارش‌ها</h2><p>وضعیت تولید، ارسال و رهگیری هر سفارش را از اینجا پیگیری کن.</p></div><div class="toolbar-actions"><input id="orderSearch" class="search-input" type="search" placeholder="جستجوی سفارش یا مشتری…"><button class="btn-primary" id="newOrderBtn">+ سفارش جدید</button></div></div>
+          <section class="panel table-panel"><div class="table-scroll"><table><thead><tr><th>کد سفارش</th><th>مشتری</th><th>محصول</th><th>وضعیت سفارش</th><th>وضعیت ارسال</th><th>رهگیری</th><th>آخرین تغییر</th><th></th></tr></thead><tbody id="ordersTable"></tbody></table></div></section>
+          <section class="panel form-panel" id="orderEditor" hidden><div class="panel-heading"><div><span class="eyebrow">ORDER RECORD</span><h3 id="orderFormTitle">ثبت سفارش</h3></div><button class="icon-close" id="closeOrderEditor">×</button></div>
+            <form id="orderForm" class="form-grid">
+              <label>کد سفارش<input name="order_id" placeholder="ORD-2026-001"></label>
+              <label>اتصال به مشتری ثبت‌شده<select name="lead_id" id="orderLead"><option value="">بدون اتصال</option></select></label>
+              <label>نام مشتری *<input name="customer_name" required></label>
+              <label>نام مخاطب<input name="contact_name"></label>
+              <label>ایمیل<input name="contact_email" type="email"></label>
+              <label>شماره تماس<input name="contact_phone"></label>
+              <label>محصول<input name="product" placeholder="چارپهلوی ویژه صنعت گریتینگ"></label>
+              <label>مقدار<input name="quantity" type="number" min="0" step="any"></label>
+              <label>واحد<input name="unit" placeholder="kg / ton"></label>
+              <label>وضعیت سفارش<select name="order_status"><option>Quotation</option><option>Confirmed</option><option>Production</option><option>Completed</option><option>Cancelled</option></select></label>
+              <label>وضعیت ارسال<select name="shipping_status"><option>Pending</option><option>Production</option><option>Ready to Ship</option><option>In Transit</option><option>Delivered</option></select></label>
+              <label>فورواردر<input name="forwarder"></label>
+              <label>شماره رهگیری<input name="tracking_number"></label>
+              <label>تاریخ سفارش<input name="order_date" type="date"></label>
+              <label>تاریخ پیش‌بینی ارسال<input name="expected_ship_date" type="date"></label>
+              <label class="wide">توضیحات<textarea name="notes" rows="3"></textarea></label>
+              <div class="form-actions wide"><button class="btn-primary" type="submit">ذخیره در دیتابیس</button><button class="btn-quiet" type="button" id="cancelOrder">انصراف</button><span id="orderStatus" role="status"></span></div>
+            </form>
+          </section>
+        </div>
+
+        <div class="view" id="view-emails">
+          <div class="toolbar"><div><span class="eyebrow">EMAIL WORKFLOW</span><h2>مرکز ایمیل‌ها</h2><p>پیش‌نویس‌ها، سوابق ارسال و مکاتبات هر مشتری.</p></div><button class="btn-primary" id="newEmailBtn">+ پیش‌نویس جدید</button></div>
+          <section class="panel table-panel"><div class="table-scroll"><table><thead><tr><th>مشتری</th><th>گیرنده</th><th>موضوع</th><th>شماره ایمیل</th><th>وضعیت</th><th>تاریخ</th><th></th></tr></thead><tbody id="emailsTable"></tbody></table></div></section>
+          <section class="panel form-panel" id="emailEditor" hidden><div class="panel-heading"><div><span class="eyebrow">EMAIL COMPOSER</span><h3>ویرایش پیش‌نویس</h3></div><button class="icon-close" id="closeEmailEditor">×</button></div>
+            <form id="emailForm" class="form-grid"><label>مشتری<select name="lead_id" id="emailLead" required><option value="">انتخاب مشتری</option></select></label><label>گیرنده<input id="emailRecipient" readonly></label><label class="wide">موضوع<input name="email_subject" required maxlength="240"></label><label class="wide">متن ایمیل<textarea name="email_body" rows="12" required></textarea></label><div class="form-actions wide"><button class="btn-primary" type="submit">ذخیره پیش‌نویس</button><button class="btn-quiet" type="button" id="cancelEmail">انصراف</button><span class="muted">ارسال ایمیل تا زمان اتصال سرویس ارسال و تأیید نهایی فعال نیست.</span></div></form>
+          </section>
+        </div>
+
+        <div class="view" id="view-activity">
+          <div class="toolbar"><div><span class="eyebrow">AUDIT TRAIL</span><h2>تاریخچه فعالیت‌ها</h2><p>سوابق ارتباط با مشتری و تغییرات سفارش‌ها.</p></div><button class="btn-primary" id="newActivityBtn">+ ثبت فعالیت</button></div>
+          <section class="panel" id="activityFormPanel" hidden><form id="activityForm" class="form-grid"><label>مشتری<select name="lead_id" id="activityLead"><option value="">انتخاب مشتری (اختیاری)</option></select></label><label>سفارش<input name="order_id" placeholder="کد سفارش (اختیاری)"></label><label>نوع فعالیت<input name="activity_type" required placeholder="تماس، جلسه، پیگیری…"></label><label>کانال ارتباط<select name="contact_channel"><option>Phone</option><option>Email</option><option>WhatsApp</option><option>Meeting</option><option>Website</option><option>Admin</option></select></label><label class="wide">خلاصه فعالیت<input name="message_summary" required></label><label>نتیجه<input name="outcome"></label><label>اقدام بعدی<input name="next_action"></label><label>تاریخ اقدام بعدی<input name="next_action_date" type="date"></label><label class="wide">یادداشت<textarea name="notes" rows="2"></textarea></label><div class="form-actions wide"><button class="btn-primary" type="submit">ثبت در تاریخچه</button></div></form></section>
+          <section class="panel"><div id="allActivity" class="activity-list"></div></section>
+        </div>
+      </section>
+      <div class="toast" id="toast" role="status"></div>
+    </main>
+  </div>
+  <script src="admin.js"></script>
+</body></html>
