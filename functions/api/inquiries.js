@@ -60,7 +60,7 @@ export async function onRequest({ request, env }) {
   const note = clean(input.note, 3000);
 
   if (fullName.length < 2 || companyName.length < 2 ||
-      !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {
+      !/^[^\s@]+@[^\s@]+\\.[^\s@]+$/.test(email)) {
     return json({
       ok: false,
       error: "Please provide a valid name, company, and email address."
