@@ -93,6 +93,12 @@
     const f=$("emailForm");f.reset();
     if(email){f.elements.lead_id.value=email.lead_id;f.elements.email_subject.value=email.email_subject||"";f.elements.email_body.value=email.email_body||"";}
     $("emailRecipient").value=email?.recipient_email||"";
+    const readOnly=email?.send_status==="Sent";
+    f.elements.lead_id.disabled=readOnly;
+    f.elements.email_subject.readOnly=readOnly;
+    f.elements.email_body.readOnly=readOnly;
+    f.querySelector('button[type="submit"]').hidden=readOnly;
+    $("emailEditor").querySelector("h3").textContent=readOnly?"مشاهده ایمیل ارسال‌شده":"ویرایش پیش‌نویس";
     $("emailEditor").hidden=false;$("emailEditor").scrollIntoView({behavior:"smooth",block:"start"});
   }
   function editEmail(id){const email=state.emails.find(e=>e.email_id===id);if(email)openEmailEditor(email);}
