@@ -46,10 +46,17 @@
     try {
       const d=await api("leads/"+encodeURIComponent(id)), l=d.lead;
       $("leadDetail").hidden=false;
-      $("leadDetail").innerHTML='<div class="panel-heading"><div><span class="eyebrow">CUSTOMER PROFILE</span><h3>'+esc(l.company_name)+'</h3></div><button class="icon-close" id="closeLeadDetail">×</button></div><div class="detail-grid">'+[
+      $("leadDetail").innerHTML='<div class="panel-heading"><div><span class="eyebrow">CUSTOMER PROFILE</span><h3>'+esc(l.company_name)+'</h3></div><div><button class="table-action" id="editLeadBtn">ویرایش مشتری</button> <button class="icon-close" id="closeLeadDetail">×</button></div></div><div class="detail-grid">'+[
         ["نام مخاطب",l.contact_name],["ایمیل",l.contact_email],["تلفن",l.phone],["وب‌سایت",l.website],["موقعیت",(l.city||"")+" "+(l.country||"")],["وضعیت",l.lead_status],["اولویت",l.priority],["یادداشت",l.notes]
       ].map(([k,v])=>'<div class="detail-item"><small>'+esc(k)+'</small><b>'+esc(v||"—")+'</b></div>').join("")+'</div><h3>سفارش‌های مشتری</h3>'+((d.orders||[]).map(o=>'<p>'+esc(o.order_id)+' · '+esc(o.shipping_status)+' · '+esc(o.product||"")+'</p>').join("")||'<p class="muted">سفارشی ثبت نشده است.</p>')+'<h3>تاریخچه ارتباطات</h3>'+((d.activities||[]).map(activityHtml).join("")||'<p class="muted">فعالیتی ثبت نشده است.</p>')+'<h3>ایمیل‌ها</h3>'+((d.emails||[]).map(e=>'<p>'+esc(e.email_subject)+' · '+esc(e.send_status)+' · '+date(e.created_at)+'</p>').join("")||'<p class="muted">ایمیلی ثبت نشده است.</p>');
       $("closeLeadDetail").onclick=()=>{$("leadDetail").hidden=true;};
+      $("editLeadBtn").onclick=()=>{
+        const fields=[["company_name","نام شرکت"],["contact_name","نام مخاطب"],["contact_email","ایمیل"],["phone","تلفن"],["website","وب‌سایت"],["country","کشور"],["city","شهر"],["lead_status","وضعیت"],["priority","اولویت"],["notes","یادداشت"]];
+        const form=document.createElement("form");form.className="form-grid";form.id="leadEditForm";
+        form.innerHTML=fields.map(([k,label])=>'<label>'+label+'<input name="'+k+'" value="'+esc(l[k]||"")+'"></label>').join("")+'<div class="form-actions wide"><button class="btn-primary" type="submit">ذخیره تغییرات</button></div>';
+        $("leadDetail").append(form);
+        form.onsubmit=async ev=>{ev.preventDefault();try{await api("leads/"+encodeURIComponent(l.lead_id),{method:"PATCH",body:JSON.stringify(payload(form))});toast("اطلاعات مشتری به‌روزرسانی شد.");await loadLeads();await loadLeadDetail(l.lead_id);}catch(err){toast(err.message,true);}};
+      };
     } catch(e){toast(e.message,true);}
   }
   async function loadOrders() {
