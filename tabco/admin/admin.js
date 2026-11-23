@@ -84,7 +84,7 @@
   }
   async function loadEmails() {
     const d=await api("emails");state.emails=d.emails||[];
-    $("emailsTable").innerHTML=state.emails.length?state.emails.map(e=>'<tr><td>'+esc(e.company_name||e.contact_name||e.lead_id)+'</td><td>'+esc(e.recipient_email)+'</td><td>'+esc(e.email_subject||"(بدون موضوع)")+'</td><td>'+esc(e.email_number)+'</td><td><span class="status-chip '+(e.send_status==="Sent"?"good":"warn")+'">'+esc(e.send_status)+'</span></td><td>'+date(e.created_at)+'</td><td><button class="table-action" data-edit-email="'+esc(e.email_id)+'" '+(e.send_status!=="Draft"?"disabled":"")+'>'+ (e.send_status==="Draft"?"ویرایش":"مشاهده")+'</button></td></tr>').join(""):'<tr><td colspan="7" class="empty-state">هنوز ایمیلی ثبت نشده است.</td></tr>';
+    $("emailsTable").innerHTML=state.emails.length?state.emails.map(e=>'<tr><td>'+esc(e.company_name||e.contact_name||e.lead_id)+'</td><td>'+esc(e.recipient_email)+'</td><td>'+esc(e.email_subject||"(بدون موضوع)")+'</td><td>'+esc(e.email_number)+'</td><td><span class="status-chip '+(e.send_status==="Sent"?"good":"warn")+'">'+esc(e.send_status)+'</span></td><td>'+date(e.created_at)+'</td><td><button class="table-action" data-edit-email="'+esc(e.email_id)+'" >'+ (e.send_status==="Draft"?"ویرایش":"مشاهده")+'</button></td></tr>').join(""):'<tr><td colspan="7" class="empty-state">هنوز ایمیلی ثبت نشده است.</td></tr>';
     $("emailsTable").querySelectorAll("[data-edit-email]").forEach(b=>b.onclick=()=>editEmail(b.dataset.editEmail));
     fillLeadSelects();
   }
