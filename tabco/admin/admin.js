@@ -121,7 +121,7 @@
 
   async function init(){
     try{const d=await api("session");showApp(d.user);}
-    catch(e){showAuth();}
+    catch(e){showAuth();if(e.message!=="HTTP 401") $("authError").textContent=e.message;}
   }
   init();
 })();
