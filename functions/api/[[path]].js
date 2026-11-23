@@ -197,6 +197,14 @@ export async function onRequest({ request, env }) {
       return json({ ok: true });
     }
 
+    if (route[0] === "activity" && method === "GET") {
+      const result = await db.prepare(`SELECT a.*, l.company_name, o.customer_name
+        FROM activity_log a LEFT JOIN leads l ON l.lead_id=a.lead_id
+        LEFT JOIN orders o ON o.order_id=a.order_id
+        ORDER BY a.activity_date DESC LIMIT 300`).all();
+      return json({ ok: true, activities: result.results || [] });
+    }
+
     if (route[0] === "activity" && method === "POST") {
       const input = await body();
       if (!clean(input.activity_type,100)) return json({ ok: false, error: "نوع فعالیت الزامی است." }, 400);
