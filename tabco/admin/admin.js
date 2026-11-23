@@ -103,6 +103,9 @@
   async function loadLeadOptions(){if(!state.leads.length){const d=await api("leads");state.leads=d.leads||[];}fillLeadSelects();}
   document.querySelectorAll(".side-link").forEach(b=>b.onclick=()=>activateTab(b.dataset.tab));
   document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>activateTab(b.dataset.go));
+  $("newLeadBtn").onclick=()=>$("leadEditor").hidden=false;
+  $("closeLeadEditor").onclick=$("cancelLead").onclick=()=>$("leadEditor").hidden=true;
+  $("leadForm").onsubmit=async e=>{e.preventDefault();try{await api("leads",{method:"POST",body:JSON.stringify(payload(e.currentTarget))});e.currentTarget.reset();$("leadEditor").hidden=true;toast("مشتری جدید در D1 ثبت شد.");await loadLeads();await loadOverview();}catch(err){toast(err.message,true);}};
   $("leadSearch").addEventListener("input",()=>loadLeads().catch(e=>toast(e.message,true)));
   $("orderSearch").addEventListener("input",()=>loadOrders().catch(e=>toast(e.message,true)));
   $("newOrderBtn").onclick=async()=>{try{await loadLeadOptions();openOrderEditor(null);}catch(e){toast(e.message,true);}};
