@@ -16,14 +16,14 @@ function base64url(value) {
   const bytes = typeof value === "string" ? new TextEncoder().encode(value) : new Uint8Array(value);
   let binary = "";
   for (const byte of bytes) binary += String.fromCharCode(byte);
-  return btoa(binary).replace(/=/g, "").replace(/\\+/g, "-").replace(/\\//g, "_");
+  return btoa(binary).replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
 }
 
 function pemToArrayBuffer(pem) {
   const body = pem
     .replace(/-----BEGIN PRIVATE KEY-----/g, "")
     .replace(/-----END PRIVATE KEY-----/g, "")
-    .replace(/\\s/g, "");
+    .replace(/\s/g, "");
   const binary = atob(body);
   const bytes = new Uint8Array(binary.length);
   for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
@@ -111,7 +111,7 @@ export async function onRequestPost({ request, env }) {
   const email = String(input.email || "").trim();
   if (fullName.length < 2 || fullName.length > 120 ||
       companyName.length < 2 || companyName.length > 160 ||
-      !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email) || email.length > 254) {
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) {
     return json({ error: "Please provide a valid name, company, and email address." }, 400);
   }
 
