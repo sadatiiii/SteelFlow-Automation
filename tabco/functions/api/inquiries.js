@@ -76,7 +76,7 @@ async function getGoogleAccessToken(env) {
   return tokenData.access_token;
 }
 
-export async function onRequestPost({ request, env }) {
+async function handlePost({ request, env }) {
   const origin = request.headers.get("Origin");
   if (origin && origin !== new URL(request.url).origin) {
     return json({ error: "Origin not allowed." }, 403);
@@ -166,9 +166,22 @@ export async function onRequestPost({ request, env }) {
   }
 }
 
-export async function onRequest({ request }) {
+export async function onRequest(context) {
+  const { request } = context;
+
   if (request.method === "OPTIONS") {
-    return new Response(null, { status: 204, headers: { "Allow": "POST, OPTIONS" } });
+    return new Response(null, {
+      status: 204,
+      headers: {
+        "Allow": "POST, OPTIONS",
+        "Cache-Control": "no-store"
+      }
+    });
   }
+
+  if (request.method === "POST") {
+    return handlePost(context);
+  }
+
   return json({ error: "Method Not Allowed" }, 405);
 }
