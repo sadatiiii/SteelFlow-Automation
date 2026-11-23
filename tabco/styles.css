@@ -260,3 +260,104 @@ th{background:var(--bg2)}
   .nav>a:after{transition:none}
   .adv-card:hover{transform:none}
 }
+
+
+/* Focused admin workspace styling: orders + CRM email review */
+body[data-page="admin"] .section,
+body[data-page="drafts"] .drafts-main{padding-top:42px;padding-bottom:76px}
+body[data-page="admin"] .section>h1,
+body[data-page="drafts"] .drafts-title h1{font-size:clamp(2rem,4vw,3rem);letter-spacing:-.8px}
+body[data-page="admin"] .section>h1:before{
+ content:"TABCO / OPERATIONS";
+ display:block;margin-bottom:12px;
+ color:var(--brand);font:800 .65rem/1.2 Inter,Arial,sans-serif;letter-spacing:2.5px;
+}
+body[data-page="admin"] .section>h1+ p,
+body[data-page="drafts"] .drafts-title>p{max-width:720px;font-size:.95rem}
+body[data-page="admin"] .notice{
+ margin:22px 0 26px;padding:15px 18px;
+ border:1px solid color-mix(in srgb,#e0ad53 42%,var(--border));
+ background:color-mix(in srgb,#e0ad53 7%,var(--panel));
+ color:var(--text);line-height:1.9;
+}
+body[data-page="admin"] .card,
+body[data-page="drafts"] .card{
+ padding:clamp(20px,3vw,30px);
+ margin:18px 0 22px;
+ border-radius:20px;
+}
+body[data-page="admin"] .card h2,
+body[data-page="drafts"] .card h2{
+ display:flex;align-items:center;gap:10px;
+ font-size:1.18rem;margin:0 0 20px;
+}
+body[data-page="admin"] .card h2:before,
+body[data-page="drafts"] .card h2:before{
+ content:"";width:7px;height:22px;border-radius:8px;background:var(--brand);
+}
+body[data-page="admin"] .grid-form{gap:17px}
+body[data-page="admin"] .grid-form label,
+body[data-page="drafts"] label{font-size:.85rem;font-weight:700;color:var(--muted)}
+body[data-page="admin"] .grid-form input,
+body[data-page="admin"] .grid-form select,
+body[data-page="admin"] .grid-form textarea,
+body[data-page="drafts"] input,
+body[data-page="drafts"] textarea{
+ min-height:47px;border-radius:11px;background:color-mix(in srgb,var(--bg) 82%,var(--panel));
+ border-color:var(--border);color:var(--text);
+}
+body[data-page="admin"] .grid-form textarea,
+body[data-page="drafts"] textarea{min-height:150px}
+body[data-page="admin"] .actions{gap:12px}
+body[data-page="admin"] .actions .btn{min-height:46px;padding-inline:22px}
+body[data-page="admin"] #clearOrders{box-shadow:none}
+body[data-page="admin"] .table-head,
+body[data-page="drafts"] .table-head{align-items:center;margin-bottom:18px}
+body[data-page="admin"] .table-head h2,
+body[data-page="drafts"] .table-head h2{margin:0}
+body[data-page="admin"] #orderSearch{
+ max-width:310px;min-height:43px;
+}
+body[data-page="admin"] .table-wrap{border-radius:15px}
+body[data-page="admin"] table{min-width:920px}
+body[data-page="admin"] th{font-weight:800;white-space:nowrap;padding:14px 12px}
+body[data-page="admin"] td{padding:13px 12px}
+body[data-page="drafts"] .drafts-title{padding:10px 0 14px}
+body[data-page="drafts"] .drafts-title .eyebrow{letter-spacing:.3px}
+body[data-page="drafts"] .auth-card{
+ grid-template-columns:minmax(0,1fr) auto;
+ gap:14px;padding:24px;
+ border-color:color-mix(in srgb,var(--brand) 24%,var(--border));
+}
+body[data-page="drafts"] .auth-card label{margin:0}
+body[data-page="drafts"] .auth-card .btn{min-height:47px;min-width:118px}
+body[data-page="drafts"] .auth-card .muted{font-size:.76rem}
+body[data-page="drafts"] #workspace>.card{margin-top:22px}
+body[data-page="drafts"] .lead-item{
+ padding:17px 18px;border-radius:14px;
+ background:linear-gradient(110deg,var(--panel),var(--glass));
+}
+body[data-page="drafts"] .lead-item strong{font-size:.94rem}
+body[data-page="drafts"] .lead-item .btn{min-width:132px}
+body[data-page="drafts"] #editorCard{
+ border-color:color-mix(in srgb,var(--brand) 35%,var(--border));
+}
+body[data-page="drafts"] #editorCard label{margin:17px 0}
+body[data-page="drafts"] #draftMeta{font-size:.8rem}
+body[data-page="drafts"] #draftRecipient{opacity:.8}
+body[data-page="drafts"] #draftBody{min-height:310px;line-height:2}
+body[data-page="drafts"] #sendDraft{min-width:170px}
+body[data-page="drafts"] .form-status{margin:12px 0 0;font-size:.85rem}
+@media(max-width:700px){
+ body[data-page="admin"] .section,
+ body[data-page="drafts"] .drafts-main{padding-top:28px}
+ body[data-page="admin"] .card,
+ body[data-page="drafts"] .card{padding:18px}
+ body[data-page="admin"] .table-head,
+ body[data-page="drafts"] .table-head{align-items:stretch;flex-direction:column}
+ body[data-page="admin"] #orderSearch{max-width:none}
+ body[data-page="drafts"] .auth-card{grid-template-columns:1fr}
+ body[data-page="drafts"] .auth-card .btn{width:100%}
+ body[data-page="drafts"] .lead-item .btn{width:100%}
+ body[data-page="drafts"] #draftBody{min-height:240px}
+}
