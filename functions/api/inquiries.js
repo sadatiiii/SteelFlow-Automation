@@ -1,187 +1,112 @@
-const SHEETS_SCOPE = "https://www.googleapis.com/auth/spreadsheets";
-const TOKEN_URL = "https://oauth2.googleapis.com/token";
-
 function json(data, status = 200) {
-  return new Response(JSON.stringify(data), {
+  return Response.json(data, {
     status,
     headers: {
-      "Content-Type": "application/json; charset=utf-8",
       "Cache-Control": "no-store",
       "X-Content-Type-Options": "nosniff"
     }
   });
 }
 
-function base64url(value) {
-  const bytes = typeof value === "string" ? new TextEncoder().encode(value) : new Uint8Array(value);
-  let binary = "";
-  for (const byte of bytes) binary += String.fromCharCode(byte);
-  return btoa(binary).replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
-}
+const clean = (value, max) => String(value ?? "").trim().slice(0, max);
 
-function pemToArrayBuffer(pem) {
-  const body = pem
-    .replace(/-----BEGIN PRIVATE KEY-----/g, "")
-    .replace(/-----END PRIVATE KEY-----/g, "")
-    .replace(/\s/g, "");
-  const binary = atob(body);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-  return bytes.buffer;
-}
-
-async function getGoogleAccessToken(env) {
-  if (!env.GOOGLE_CLIENT_EMAIL || !env.GOOGLE_PRIVATE_KEY) {
-    throw new Error("Missing GOOGLE_CLIENT_EMAIL or GOOGLE_PRIVATE_KEY secret.");
+export async function onRequest({ request, env }) {
+  if (request.method === "OPTIONS") {
+    return new Response(null, {
+      status: 204,
+      headers: { "Allow": "POST, OPTIONS", "Cache-Control": "no-store" }
+    });
+  }
+  if (request.method !== "POST") {
+    return json({ ok: false, error: "Method not allowed." }, 405);
   }
 
-  const now = Math.floor(Date.now() / 1000);
-  const header = base64url(JSON.stringify({ alg: "RS256", typ: "JWT" }));
-  const claims = base64url(JSON.stringify({
-    iss: env.GOOGLE_CLIENT_EMAIL,
-    scope: SHEETS_SCOPE,
-    aud: TOKEN_URL,
-    iat: now,
-    exp: now + 3600
-  }));
-  const unsignedToken = header + "." + claims;
-
-  const key = await crypto.subtle.importKey(
-    "pkcs8",
-    pemToArrayBuffer(env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n")),
-    { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
-    false,
-    ["sign"]
-  );
-  const signature = await crypto.subtle.sign(
-    "RSASSA-PKCS1-v1_5",
-    key,
-    new TextEncoder().encode(unsignedToken)
-  );
-
-  const assertion = unsignedToken + "." + base64url(signature);
-  const tokenResponse = await fetch(TOKEN_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({
-      grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
-      assertion
-    })
-  });
-
-  const tokenData = await tokenResponse.json();
-  if (!tokenResponse.ok || !tokenData.access_token) {
-    throw new Error("Google OAuth token exchange failed: " + (tokenData.error_description || tokenData.error || tokenResponse.status));
+  // This endpoint writes directly to the same Cloudflare D1 database used by TABCO.
+  // Bind the existing database as "DB" in Pages > Settings > Functions > D1 database bindings.
+  const db = env.DB;
+  if (!db) {
+    return json({
+      ok: false,
+      error: "D1 is not bound to this Pages deployment. Bind tabco-db as DB."
+    }, 503);
   }
-  return tokenData.access_token;
-}
 
-async function handlePost({ request, env }) {
   const origin = request.headers.get("Origin");
   if (origin && origin !== new URL(request.url).origin) {
-    return json({ error: "Origin not allowed." }, 403);
-  }
-
-  if (!env.GOOGLE_SHEET_ID) {
-    return json({ error: "GOOGLE_SHEET_ID is not configured in Cloudflare." }, 503);
+    return json({ ok: false, error: "Origin not allowed." }, 403);
   }
 
   const contentType = request.headers.get("Content-Type") || "";
   if (!contentType.toLowerCase().includes("application/json")) {
-    return json({ error: "Content-Type must be application/json." }, 415);
-  }
-
-  let rawBody;
-  try {
-    rawBody = await request.text();
-    if (rawBody.length > 12000) return json({ error: "Request is too large." }, 413);
-  } catch {
-    return json({ error: "Could not read request body." }, 400);
+    return json({ ok: false, error: "Content-Type must be application/json." }, 415);
   }
 
   let input;
   try {
-    input = JSON.parse(rawBody);
+    const raw = await request.text();
+    if (raw.length > 12000) return json({ ok: false, error: "Request is too large." }, 413);
+    input = JSON.parse(raw);
   } catch {
-    return json({ error: "Invalid JSON." }, 400);
+    return json({ ok: false, error: "Invalid JSON." }, 400);
   }
 
-  const fullName = String(input.full_name || "").trim();
-  const companyName = String(input.company_name || "").trim();
-  const email = String(input.email || "").trim();
-  if (fullName.length < 2 || fullName.length > 120 ||
-      companyName.length < 2 || companyName.length > 160 ||
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) {
-    return json({ error: "Please provide a valid name, company, and email address." }, 400);
+  const fullName = clean(input.full_name, 120);
+  const companyName = clean(input.company_name, 160);
+  const email = clean(input.email, 254).toLowerCase();
+  const phone = clean(input.phone, 50);
+  const country = clean(input.country, 100);
+  const city = clean(input.city, 100);
+  const website = clean(input.website, 300);
+  const note = clean(input.note, 3000);
+
+  if (fullName.length < 2 || companyName.length < 2 ||
+      !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {
+    return json({
+      ok: false,
+      error: "Please provide a valid name, company, and email address."
+    }, 400);
   }
 
-  const clean = (value, max) => String(value || "").trim().slice(0, max);
-  const leadId = "WEB-" + crypto.randomUUID();
-  const row = [
-    leadId,
-    companyName,
-    clean(input.website, 300),
-    clean(input.country, 100),
-    clean(input.city, 100),
-    "",
-    fullName,
-    "",
-    email,
-    "",
-    clean(input.phone, 50),
-    clean(input.note, 3000),
-    "Normal",
-    "New",
-    "No",
-    "Website inquiry"
-  ];
+  const leadId = "WEB-" + crypto.randomUUID().replace(/-/g, "").slice(0, 12).toUpperCase();
+  const activityId = "ACT-" + crypto.randomUUID().replace(/-/g, "").slice(0, 12).toUpperCase();
+  const now = new Date().toISOString();
 
   try {
-    const accessToken = await getGoogleAccessToken(env);
-    const range = encodeURIComponent("Leads!A:P");
-    const endpoint = "https://sheets.googleapis.com/v4/spreadsheets/" +
-      encodeURIComponent(env.GOOGLE_SHEET_ID) +
-      "/values/" + range +
-      ":append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS";
+    const existing = await db.prepare(
+      "SELECT lead_id FROM leads WHERE lower(contact_email) = ? AND lead_status != 'Rejected' LIMIT 1"
+    ).bind(email).first();
 
-    const sheetsResponse = await fetch(endpoint, {
-      method: "POST",
-      headers: {
-        "Authorization": "Bearer " + accessToken,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ values: [row] })
-    });
-
-    if (!sheetsResponse.ok) {
-      const details = await sheetsResponse.text();
-      console.error("Google Sheets append failed:", sheetsResponse.status, details.slice(0, 1000));
-      return json({ error: "Could not save the inquiry to Google Sheets. Check the service account access and sheet tab name." }, 502);
+    if (existing) {
+      // Do not silently overwrite an existing CRM record submitted by another channel.
+      return json({
+        ok: true,
+        duplicate: true,
+        lead_id: existing.lead_id,
+        message: "A request with this email address is already recorded."
+      }, 200);
     }
 
-    return json({ ok: true, lead_id: leadId, message: "Inquiry saved." }, 201);
+    await db.batch([
+      db.prepare(`INSERT INTO leads (
+        lead_id, company_name, website, country, city, contact_name,
+        contact_email, phone, personalization_note, priority, lead_status,
+        opt_out, notes, created_at, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'Normal', 'New', 'No',
+                'Website inquiry', ?, ?)`)
+        .bind(leadId, companyName, website, country, city, fullName, email,
+              phone, note, now, now),
+      db.prepare(`INSERT INTO activity_log (
+        activity_id, lead_id, activity_date, activity_type, contact_channel,
+        message_summary, outcome, notes
+      ) VALUES (?, ?, ?, 'Website inquiry', 'Website',
+                'New collaboration inquiry received through tabcoyazd.ir',
+                'Recorded in D1', 'Public inquiry form')`)
+        .bind(activityId, leadId, now)
+    ]);
+
+    return json({ ok: true, duplicate: false, lead_id: leadId, message: "Inquiry saved." }, 201);
   } catch (error) {
-    console.error("Inquiry API error:", error instanceof Error ? error.message : "Unknown error");
-    return json({ error: "The inquiry service is not configured correctly. Check Cloudflare secrets and Google service account settings." }, 503);
+    console.error("D1 inquiry insert failed:", error);
+    return json({ ok: false, error: "The inquiry could not be saved. Please try again later." }, 503);
   }
-}
-
-export async function onRequest(context) {
-  const { request } = context;
-
-  if (request.method === "OPTIONS") {
-    return new Response(null, {
-      status: 204,
-      headers: {
-        "Allow": "POST, OPTIONS",
-        "Cache-Control": "no-store"
-      }
-    });
-  }
-
-  if (request.method === "POST") {
-    return handlePost(context);
-  }
-
-  return json({ error: "Method Not Allowed" }, 405);
 }
