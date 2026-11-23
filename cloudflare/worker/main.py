@@ -76,6 +76,9 @@ async def api_root():
 
 @app.post("/api/inquiries", status_code=201)
 async def submit_inquiry(data: Inquiry, request: Request):
+    env = request.scope.get("env")
+    if str(getattr(env, "INQUIRY_FORM_ENABLED", "false")).lower() != "true":
+        raise HTTPException(status_code=503, detail="The inquiry endpoint is not enabled yet")
     db = get_db(request)
     email = clean(data.email).lower()
     if not re.fullmatch(r"[^\\s@]+@[^\\s@]+\\.[^\\s@]+", email):
