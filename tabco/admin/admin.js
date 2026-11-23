@@ -19,10 +19,10 @@
     document.querySelectorAll(".side-link").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
     document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id==="view-"+tab));
     $("pageTitle").textContent=titles[tab]||"مرکز مدیریت";
-    if(tab==="leads") loadLeads();
-    if(tab==="orders") loadOrders();
-    if(tab==="emails") loadEmails();
-    if(tab==="activity") loadActivity();
+    if(tab==="leads") loadLeads().catch(e=>toast(e.message,true));
+    if(tab==="orders") loadOrders().catch(e=>toast(e.message,true));
+    if(tab==="emails") loadEmails().catch(e=>toast(e.message,true));
+    if(tab==="activity") loadActivity().catch(e=>toast(e.message,true));
   }
   async function loadOverview() {
     const d=await api("overview");
