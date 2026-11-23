@@ -90,8 +90,8 @@
   }
   function editEmail(id){const email=state.emails.find(e=>e.email_id===id);if(email)openEmailEditor(email);}
   async function loadActivity(){
-    // Activity history is fetched through the dashboard aggregate to keep the API read-only here.
-    const d=await api("overview");$("allActivity").innerHTML=(d.recent||[]).map(activityHtml).join("")||'<div class="empty-state">فعالیتی ثبت نشده است.</div>';
+    const d=await api("activity");
+    $("allActivity").innerHTML=(d.activities||[]).map(activityHtml).join("")||'<div class="empty-state">فعالیتی ثبت نشده است.</div>';
   }
   async function loadLeadOptions(){if(!state.leads.length){const d=await api("leads");state.leads=d.leads||[];}fillLeadSelects();}
   document.querySelectorAll(".side-link").forEach(b=>b.onclick=()=>activateTab(b.dataset.tab));
