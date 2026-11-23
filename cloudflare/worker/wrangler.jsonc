@@ -8,7 +8,7 @@
     {
       "binding": "DB",
       "database_name": "tabco-db",
-      "database_id": "REPLACE_AFTER_CREATING_D1_DATABASE",
+      "database_id": "df8d72a4-3e88-4881-9cd4-5f722d288b79",
       "migrations_dir": "../migrations"
     }
   ]
