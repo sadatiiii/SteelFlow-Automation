@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "tabco-admin-api",
+  "main": "main.py",
+  "compatibility_date": "2026-11-23",
+  "compatibility_flags": ["python_workers"],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "tabco-db",
+      "database_id": "df8d72a4-3e88-4881-9cd4-5f722d288b79",
+      "migrations_dir": "../migrations"
+    }
+  ]
+}
