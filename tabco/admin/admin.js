@@ -115,7 +115,6 @@
   async function init(){
     try{const d=await api("session");showApp(d.user);}
     catch(e){showAuth();}
-    if(state.tab!=="overview") activateTab(state.tab);
   }
   init();
 })();
