@@ -1,38 +1,51 @@
-# TABCO on Cloudflare
+# TABCO Cloudflare architecture
 
-Target architecture: Cloudflare Pages for the existing website, a Python Worker for the API, and D1 as the canonical database.
+## One source of truth
 
-- Pages: public TABCO site and admin interface.
-- Python Worker: API and server-side business logic.
-- D1: leads, email history, orders, and append-only activity history.
-- Gemini API: server-side email drafting; keep its key in Worker secrets.
-- Email delivery: implement after choosing a Cloudflare-compatible provider. Do not assume raw SMTP sockets are available inside Workers.
+The canonical data store for the whole TABCO website and admin system is the existing Cloudflare D1 database:
 
-## Current status
+- Database: `tabco-db`
+- Database ID: `df8d72a4-3e88-4881-9cd4-5f722d288b79`
+- Pages Functions D1 binding name: `DB`
 
-- The D1 database `tabco-db` has been created and the initial schema was applied manually in the Cloudflare D1 SQL Console.
-- The six application tables are present: `leads`, `emails`, `orders`, `activity_log`, `admin_users`, and `admin_sessions`.
-- `worker/main.py` includes a health endpoint that checks the D1 binding and required schema.
-- `POST /api/inquiries` is implemented but deliberately disabled by default. Do not enable it until abuse protection (for example, Turnstile and/or rate limiting) is configured.
-- Authentication, admin CRUD, Gemini integration, email delivery, frontend migration, and data import are still pending.
-- This Worker has not yet been deployed or connected to the live Pages site.
+The public inquiry form, CRM/leads, email drafts and history, order tracking, and activity timeline must all read/write through the same Pages Functions API and the same `DB` binding.
 
-## Worker configuration
+Do not use Google Sheets as an application database. Do not store business records, credentials, or admin sessions in browser storage. Google Sheets is retained only as a manual backup until a verified export/import process is completed.
 
-The Wrangler configuration is at `worker/wrangler.jsonc`. It references the existing D1 database through the `DB` binding and points migrations to `../migrations`.
+## Runtime
 
-The schema has already been applied through the dashboard SQL Console. Do not run the initial migration again unless you have first checked migration state and understand the effect.
+- Cloudflare Pages serves the website and its API under `/api/*`.
+- Pages Functions use `context.env.DB` to access D1 directly.
+- There is no `AUTOMATION_API_ORIGIN` setting and no external API proxy.
+- `functions/api/[[path]].js` is only a not-found fallback; each API endpoint has its own Pages Function route.
+- `cloudflare/worker/` is an earlier Python Worker prototype. It is not the live Pages API and must not be treated as deployed or connected.
 
-## Data migration safety
+## Existing database
 
-The existing Google Sheets workbook remains untouched during development. Export the `Leads` and `Emails` tabs to CSV and keep an independent backup before importing. D1 becomes authoritative only after import and verification. Do not delete the old spreadsheet.
+The initial schema has already been applied manually in the D1 SQL Console. The application tables are:
 
-## Data model
+- `leads`
+- `emails`
+- `orders`
+- `activity_log`
+- `admin_users`
+- `admin_sessions`
 
-- `leads`: all leads, regardless of status.
-- `emails`: drafts and sent-message history, linked to a lead.
-- `orders`: current order state, optionally linked to a lead.
-- `activity_log`: append-only event history; each event can reference a lead and an order.
-- `admin_users` and `admin_sessions`: server-side authentication records.
+Do not re-run the initial schema migration against the existing database without checking its current state first.
 
-The admin UI must not store leads, emails, orders, credentials, or session tokens in localStorage. Use secure, HttpOnly cookies for sessions.
+## Pages D1 binding
+
+The Pages project must have a D1 binding named exactly `DB` pointing to the existing `tabco-db` database. Configure it in Cloudflare Pages under Settings → Bindings → D1 database bindings, for the production environment (and Preview if previews are used), then redeploy. The Pages Function will return a clear 503 if this binding is absent; it must never silently fall back to Sheets or browser storage.
+
+## Security and unfinished work
+
+- Public inquiry submissions are validated and inserted into `leads` and `activity_log` in a D1 batch.
+- Duplicate email addresses are detected against existing non-rejected leads; existing CRM records are not overwritten by a public form submission.
+- Before treating the public form as production-ready, add abuse protection such as Turnstile and rate limiting.
+- Admin login, secure HttpOnly sessions, leads/orders CRUD, email draft/history endpoints, Gemini drafting, and provider-based email delivery are still being implemented.
+- Email delivery must require an explicit human approval. Do not send automatically.
+- Never claim the admin pages are D1-backed until their browser code has been migrated and tested against the Pages API.
+
+## Backup and migration
+
+Keep the existing Google Sheets workbook untouched as a backup. Export and verify the Leads and Emails data before importing anything into D1. Do not create an Orders tab or make Sheets the primary data source.
