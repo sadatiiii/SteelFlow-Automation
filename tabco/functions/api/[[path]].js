@@ -49,6 +49,32 @@ async function logActivity(db, values) {
 export async function onRequest({ request, env }) {
   const url = new URL(request.url);
   const path = url.pathname.replace(/^\/api\/?/, "").split("/").filter(Boolean).map(decodeURIComponent);
+  if (path[0] === "google" && path[1] === "callback" && request.method === "GET") {
+    const state = url.searchParams.get("state") || "";
+    const expectedState = cookieValue(request, "tabco_google_oauth_state");
+    const code = url.searchParams.get("code") || "";
+    const clearState = "tabco_google_oauth_state=; Path=/api; HttpOnly; Secure; SameSite=Lax; Max-Age=0";
+    if (!state || !expectedState || state !== expectedState || !code) {
+      return new Response("OAuth verification failed. Return to the TABCO admin panel and try connecting Gmail again.", { status: 400, headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store", "Set-Cookie": clearState } });
+    }
+    if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET) {
+      return new Response("Google OAuth credentials are missing. Add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET to Cloudflare Pages secrets, then redeploy.", { status: 503, headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store", "Set-Cookie": clearState } });
+    }
+    const redirectUri = env.GOOGLE_REDIRECT_URI || (url.origin + "/api/google/callback");
+    const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({ code, client_id: env.GOOGLE_CLIENT_ID, client_secret: env.GOOGLE_CLIENT_SECRET, redirect_uri: redirectUri, grant_type: "authorization_code" })
+    });
+    const tokens = await tokenResponse.json().catch(() => ({}));
+    if (!tokenResponse.ok || !tokens.refresh_token) {
+      console.error("Google OAuth token exchange failed:", tokens.error || tokenResponse.status);
+      return new Response("Google did not return a refresh token. Reconnect Gmail from TABCO admin and approve offline access. Error: " + clean(tokens.error_description || tokens.error || "refresh_token_missing", 300), { status: 502, headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store", "Set-Cookie": clearState } });
+    }
+    const safeToken = String(tokens.refresh_token).replace(/[&<>"']/g, ch => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[ch]));
+    const page = `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>TABCO Gmail connected</title><body style="font:16px system-ui;max-width:760px;margin:8vh auto;padding:24px;background:#101714;color:#f1f4ed"><h1 style="color:#c9f36a">Gmail authorization successful</h1><p>Copy this refresh token and add it to Cloudflare Pages as a Secret named <b>GOOGLE_REFRESH_TOKEN</b>. Do not share it or commit it to GitHub. Then redeploy the Pages project.</p><textarea id="token" readonly style="width:100%;min-height:110px;padding:12px;box-sizing:border-box">${safeToken}</textarea><p><button onclick="navigator.clipboard.writeText(document.getElementById('token').value)" style="padding:12px 18px;background:#c9f36a;border:0;border-radius:8px;font-weight:700">Copy refresh token</button></p><p>After saving the secret, return to <a style="color:#c9f36a" href="/admin/">TABCO Admin</a>.</p></body></html>`;
+    return new Response(page, { status: 200, headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Set-Cookie": clearState, "X-Content-Type-Options": "nosniff" } });
+  }
   if (path[0] !== "admin") return json({ ok: false, error: "API route not found." }, 404);
   if (!sameOrigin(request)) return json({ ok: false, error: "Origin not allowed." }, 403);
   const db = env.DB;
@@ -104,6 +130,22 @@ export async function onRequest({ request, env }) {
 
     const admin = await requireAdmin(request, db);
     if (!admin) return json({ ok: false, error: "برای ادامه وارد پنل مدیریت شوید." }, 401);
+
+    if (route[0] === "google" && route[1] === "connect" && method === "GET") {
+      if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET) return json({ ok: false, error: "ابتدا GOOGLE_CLIENT_ID و GOOGLE_CLIENT_SECRET را در Cloudflare تنظیم کنید." }, 503);
+      const state = crypto.randomUUID() + crypto.randomUUID();
+      const redirectUri = env.GOOGLE_REDIRECT_URI || (url.origin + "/api/google/callback");
+      const authUrl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
+      authUrl.search = new URLSearchParams({
+        client_id: env.GOOGLE_CLIENT_ID, redirect_uri: redirectUri, response_type: "code",
+        scope: "https://www.googleapis.com/auth/gmail.send",
+        access_type: "offline", prompt: "consent", include_granted_scopes: "true", state
+      }).toString();
+      return new Response(null, { status: 302, headers: {
+        "Location": authUrl.toString(), "Cache-Control": "no-store",
+        "Set-Cookie": "tabco_google_oauth_state=" + encodeURIComponent(state) + "; Path=/api; HttpOnly; Secure; SameSite=Lax; Max-Age=600"
+      }});
+    }
 
     if (route[0] === "overview" && method === "GET") {
       const [leads, orders, drafts, sent, recent] = await Promise.all([
@@ -305,7 +347,55 @@ export async function onRequest({ request, env }) {
     }
 
     if (route[0] === "emails" && route.length === 3 && route[2] === "send" && method === "POST") {
-      return json({ ok: false, error: "ارسال ایمیل تا زمان اتصال سرویس ارسال امن و تنظیم تأیید انسانی فعال نیست." }, 501);
+      const input = await body();
+      if (input.confirm !== true) return json({ ok: false, error: "برای ارسال، تأیید صریح مدیر لازم است." }, 400);
+      const emailId = route[1];
+      const email = await db.prepare("SELECT * FROM emails WHERE email_id=?").bind(emailId).first();
+      if (!email || email.send_status !== "Draft") return json({ ok: false, error: "فقط پیش‌نویس‌های ذخیره‌شده قابل ارسال هستند." }, 409);
+      if (!email.recipient_email || !email.email_subject || !email.email_body) return json({ ok: false, error: "گیرنده، موضوع و متن ایمیل باید کامل باشند." }, 400);
+      if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET || !env.GOOGLE_REFRESH_TOKEN) {
+        return json({ ok: false, error: "اتصال Gmail کامل نیست. ابتدا Gmail را از پنل متصل کنید و Secret با نام GOOGLE_REFRESH_TOKEN را در Cloudflare ذخیره کنید." }, 503);
+      }
+      const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
+        method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({ client_id: env.GOOGLE_CLIENT_ID, client_secret: env.GOOGLE_CLIENT_SECRET, refresh_token: env.GOOGLE_REFRESH_TOKEN, grant_type: "refresh_token" })
+      });
+      const tokenData = await tokenResponse.json().catch(() => ({}));
+      if (!tokenResponse.ok || !tokenData.access_token) {
+        console.error("Gmail token refresh failed:", tokenData.error || tokenResponse.status);
+        return json({ ok: false, error: "دریافت مجوز موقت Gmail ناموفق بود؛ اتصال Gmail را دوباره بررسی کن." }, 502);
+      }
+      const utf8Base64 = value => {
+        const bytes = new TextEncoder().encode(value);
+        let binary = "";
+        for (let i=0;i<bytes.length;i+=0x8000) binary += String.fromCharCode(...bytes.subarray(i,i+0x8000));
+        return btoa(binary);
+      };
+      const subjectEncoded = "=?UTF-8?B?" + utf8Base64(email.email_subject) + "?=";
+      const mime = [
+        "To: " + email.recipient_email,
+        "From: TABCO <tabcoyazd@gmail.com>",
+        "Subject: " + subjectEncoded,
+        "MIME-Version: 1.0",
+        "Content-Type: text/plain; charset=UTF-8",
+        "Content-Transfer-Encoding: base64",
+        "",
+        utf8Base64(email.email_body)
+      ].join("\r\n");
+      const raw = utf8Base64(mime).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+      const gmailResponse = await fetch("https://gmail.googleapis.com/gmail/v1/users/me/messages/send", {
+        method: "POST",
+        headers: { "Authorization": "Bearer " + tokenData.access_token, "Content-Type": "application/json" },
+        body: JSON.stringify({ raw })
+      });
+      const gmailResult = await gmailResponse.json().catch(() => ({}));
+      if (!gmailResponse.ok) {
+        console.error("Gmail send failed:", gmailResult.error?.message || gmailResponse.status);
+        return json({ ok: false, error: gmailResult.error?.message || "ارسال از Gmail ناموفق بود." }, 502);
+      }
+      await db.prepare("UPDATE emails SET send_status='Sent' WHERE email_id=? AND send_status='Draft'").bind(emailId).run();
+      await logActivity(db, { lead_id: email.lead_id, activity_type: "Email sent", contact_channel: "Gmail", message_summary: "Email #" + email.email_number + " sent to " + email.recipient_email, outcome: "Sent" });
+      return json({ ok: true, message_id: gmailResult.id || null });
     }
 
     return json({ ok: false, error: "Admin API route not found." }, 404);
