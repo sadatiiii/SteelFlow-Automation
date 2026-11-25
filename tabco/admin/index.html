@@ -89,7 +89,7 @@
               <label>محصول<input name="product" placeholder="چارپهلوی ویژه صنعت گریتینگ"></label>
               <label>مقدار<input name="quantity" type="number" min="0" step="any"></label>
               <label>واحد<input name="unit" placeholder="kg / ton"></label>
-              <label>وضعیت سفارش<select name="order_status"><option>Quotation</option><option>Confirmed</option><option>Production</option><option>Completed</option><option>Cancelled</option></select></label>
+              <label>وضعیت سفارش<select name="order_status"><option>Needs Details</option><option>Quotation</option><option>Confirmed</option><option>Production</option><option>Completed</option><option>Cancelled</option></select></label>
               <label>وضعیت ارسال<select name="shipping_status"><option>Pending</option><option>Production</option><option>Ready to Ship</option><option>In Transit</option><option>Delivered</option></select></label>
               <label>فورواردر<input name="forwarder"></label>
               <label>شماره رهگیری<input name="tracking_number"></label>
@@ -102,10 +102,10 @@
         </div>
 
         <div class="view" id="view-emails">
-          <div class="toolbar"><div><span class="eyebrow">EMAIL WORKFLOW</span><h2>مرکز ایمیل‌ها</h2><p>پیش‌نویس‌ها، سوابق ارسال و مکاتبات هر مشتری.</p></div><button class="btn-primary" id="newEmailBtn">+ پیش‌نویس جدید</button></div>
+          <div class="toolbar"><div><span class="eyebrow">EMAIL WORKFLOW</span><h2>مرکز ایمیل‌ها</h2><p>پیش‌نویس‌ها، سوابق ارسال و مکاتبات هر مشتری.</p></div><div class="toolbar-actions"><button class="btn-quiet" id="connectGmailBtn">اتصال Gmail</button><button class="btn-primary" id="newEmailBtn">+ پیش‌نویس جدید</button></div></div>
           <section class="panel table-panel"><div class="table-scroll"><table><thead><tr><th>مشتری</th><th>گیرنده</th><th>موضوع</th><th>شماره ایمیل</th><th>وضعیت</th><th>تاریخ</th><th></th></tr></thead><tbody id="emailsTable"></tbody></table></div></section>
           <section class="panel form-panel" id="emailEditor" hidden><div class="panel-heading"><div><span class="eyebrow">EMAIL COMPOSER</span><h3>ویرایش پیش‌نویس</h3></div><button class="icon-close" id="closeEmailEditor">×</button></div>
-            <form id="emailForm" class="form-grid"><label>مشتری<select name="lead_id" id="emailLead" required><option value="">انتخاب مشتری</option></select></label><label>گیرنده<input id="emailRecipient" readonly></label><label class="wide">موضوع<input name="email_subject" required maxlength="240"></label><label class="wide">متن ایمیل<textarea name="email_body" rows="12" required></textarea></label><div class="form-actions wide"><button class="btn-quiet" type="button" id="generateEmailBtn">✦ تولید پیش‌نویس با Gemini</button><button class="btn-primary" type="submit">ذخیره پیش‌نویس</button><button class="btn-quiet" type="button" id="cancelEmail">انصراف</button><span class="muted" id="emailAiStatus">پیش‌نویس تولیدشده را می‌توانی قبل از ارسال ویرایش کنی.</span></div></form>
+            <form id="emailForm" class="form-grid"><label>مشتری<select name="lead_id" id="emailLead" required><option value="">انتخاب مشتری</option></select></label><label>گیرنده<input id="emailRecipient" readonly></label><label class="wide">موضوع<input name="email_subject" required maxlength="240"></label><label class="wide">متن ایمیل<textarea name="email_body" rows="12" required></textarea></label><div class="form-actions wide"><button class="btn-quiet" type="button" id="generateEmailBtn">✦ تولید پیش‌نویس با Gemini</button><button class="btn-primary" type="submit">ذخیره پیش‌نویس</button><button class="btn-primary" type="button" id="sendEmailBtn" hidden>ارسال از Gmail</button><button class="btn-quiet" type="button" id="cancelEmail">انصراف</button><span class="muted" id="emailAiStatus">پیش‌نویس تولیدشده را می‌توانی قبل از ارسال ویرایش کنی.</span></div></form>
           </section>
         </div>
 
