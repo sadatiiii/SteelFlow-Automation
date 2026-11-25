@@ -98,6 +98,9 @@
     f.elements.email_subject.readOnly=readOnly;
     f.elements.email_body.readOnly=readOnly;
     f.querySelector('button[type="submit"]').hidden=readOnly;
+    $("sendEmailBtn").hidden=readOnly || !email?.email_id;
+    $("generateEmailBtn").hidden=readOnly;
+    $("emailAiStatus").textContent=readOnly?"این ایمیل ارسال شده و فقط قابل مشاهده است.":"پیش‌نویس را بررسی و ویرایش کن؛ ارسال فقط با تأیید خودت انجام می‌شود.";
     $("emailEditor").querySelector("h3").textContent=readOnly?"مشاهده ایمیل ارسال‌شده":"ویرایش پیش‌نویس";
     $("emailEditor").hidden=false;$("emailEditor").scrollIntoView({behavior:"smooth",block:"start"});
   }
@@ -118,6 +121,21 @@
   $("closeOrderEditor").onclick=$("cancelOrder").onclick=()=>{$("orderEditor").hidden=true;};
   $("orderForm").onsubmit=async e=>{e.preventDefault();const data=payload(e.currentTarget);try{const path=state.editingOrder?"orders/"+encodeURIComponent(state.editingOrder):"orders";await api(path,{method:state.editingOrder?"PATCH":"POST",body:JSON.stringify(data)});toast("اطلاعات سفارش در D1 ذخیره شد.");$("orderEditor").hidden=true;await loadOrders();await loadOverview();}catch(err){$("orderStatus").textContent=err.message;toast(err.message,true);}};
   $("newEmailBtn").onclick=async()=>{try{await loadLeadOptions();openEmailEditor(null);}catch(e){toast(e.message,true);}};
+  $("connectGmailBtn").onclick=()=>{window.location.href="/api/admin/google/connect";};
+  $("sendEmailBtn").onclick=async()=>{
+    if(!state.editingEmail){toast("ابتدا پیش‌نویس را ذخیره کن.",true);return;}
+    const f=$("emailForm"), data=payload(f);
+    try{
+      await api("emails/"+encodeURIComponent(state.editingEmail),{method:"PATCH",body:JSON.stringify(data)});
+      if(!confirm("ایمیل برای "+$("emailRecipient").value+" از حساب Gmail متصل‌شده ارسال شود؟"))return;
+      const btn=$("sendEmailBtn");btn.disabled=true;
+      try{
+        await api("emails/"+encodeURIComponent(state.editingEmail)+"/send",{method:"POST",body:JSON.stringify({confirm:true})});
+        toast("ایمیل با موفقیت از Gmail ارسال شد.");
+        $("emailEditor").hidden=true;await loadEmails();await loadOverview();
+      }finally{btn.disabled=false;}
+    }catch(err){toast(err.message,true);$("emailAiStatus").textContent=err.message;}
+  };
   $("generateEmailBtn").onclick=async()=>{
     const leadId=$("emailLead").value;
     if(!leadId){toast("ابتدا مشتری را انتخاب کن.",true);return;}
