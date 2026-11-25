@@ -228,6 +228,58 @@ export async function onRequest({ request, env }) {
       return json({ ok: true }, 201);
     }
 
+    if (route[0] === "emails" && route[1] === "generate" && method === "POST") {
+      const input = await body();
+      const leadId = clean(input.lead_id, 80);
+      if (!leadId) return json({ ok: false, error: "ابتدا مشتری را انتخاب کنید." }, 400);
+      const geminiKey = env.GEMINI_API_KEY || env.GOOGLE_GEMINI_API_KEY || env.GOOGLE_API_KEY;
+      if (!geminiKey) return json({ ok: false, error: "کلید Gemini در Cloudflare پیدا نشد. نام Secret را GEMINI_API_KEY قرار دهید." }, 503);
+      const lead = await db.prepare("SELECT * FROM leads WHERE lead_id=?").bind(leadId).first();
+      if (!lead || !lead.contact_email) return json({ ok: false, error: "مشتری یا ایمیل معتبر پیدا نشد." }, 400);
+      const order = input.order_id
+        ? await db.prepare("SELECT * FROM orders WHERE order_id=? AND lead_id=?").bind(clean(input.order_id,80),leadId).first()
+        : await db.prepare("SELECT * FROM orders WHERE lead_id=? AND is_archived=0 ORDER BY created_at DESC LIMIT 1").bind(leadId).first();
+      const prompt = [
+        "You are the professional B2B sales correspondence assistant for TABCO, an industrial manufacturer/supplier of square twisted bars used in grating.",
+        "Write a concise, credible first-contact or follow-up email in English unless the customer data clearly indicates another language.",
+        "Never invent prices, certifications, delivery dates, stock, customer history, technical capabilities, or promises.",
+        "Use only facts supplied below. If details are missing, ask clear questions instead of making assumptions.",
+        "Return ONLY valid JSON with exactly two string properties: subject and body. No markdown fences.",
+        "TABCO brand context: industrial precision, professional long-term cooperation, product: square twisted bar for grating; known sizes may include 4x4, 5x5, 6x6, 8x8, 10x10 mm. Do not claim every size is currently available.",
+        "Customer: " + JSON.stringify({company:lead.company_name,contact:lead.contact_name,email:lead.contact_email,country:lead.country,city:lead.city,website:lead.website,notes:lead.notes,personalization:lead.personalization_note}),
+        "Related request/order: " + JSON.stringify(order ? {id:order.order_id,product:order.product,quantity:order.quantity,unit:order.unit,status:order.order_status,notes:order.notes} : null),
+        "Requested email sequence number: " + String((await db.prepare("SELECT COALESCE(MAX(email_number),0)+1 AS n FROM emails WHERE lead_id=?").bind(leadId).first())?.n || 1)
+      ].join("\n\n");
+      const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + encodeURIComponent(geminiKey), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ role: "user", parts: [{ text: prompt }] }],
+          generationConfig: { responseMimeType: "application/json", responseSchema: {
+            type: "OBJECT", properties: { subject: { type: "STRING" }, body: { type: "STRING" } },
+            required: ["subject", "body"]
+          } }
+        })
+      });
+      const generated = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        console.error("Gemini API error:", generated);
+        return json({ ok: false, error: generated.error?.message || "Gemini نتوانست پیش‌نویس را تولید کند." }, 502);
+      }
+      const rawText = generated.candidates?.[0]?.content?.parts?.map(p => p.text || "").join("").trim();
+      if (!rawText) return json({ ok: false, error: "پاسخ Gemini خالی بود." }, 502);
+      let draft;
+      try { draft = JSON.parse(rawText); } catch { return json({ ok: false, error: "فرمت پاسخ Gemini معتبر نبود؛ دوباره تلاش کنید." }, 502); }
+      const subject = clean(draft.subject,240), emailBody = clean(draft.body,12000);
+      if (!subject || !emailBody) return json({ ok: false, error: "Gemini موضوع یا متن ایمیل را تولید نکرد." }, 502);
+      const n = await db.prepare("SELECT COALESCE(MAX(email_number),0)+1 AS n FROM emails WHERE lead_id=?").bind(leadId).first();
+      const emailId = id("EML"), now = new Date().toISOString();
+      await db.prepare("INSERT INTO emails (email_id, lead_id, email_number, recipient_email, email_subject, email_body, send_status, created_at) VALUES (?, ?, ?, ?, ?, ?, 'Draft', ?)")
+        .bind(emailId, leadId, n.n, lead.contact_email, subject, emailBody, now).run();
+      await logActivity(db, { lead_id: leadId, order_id: order?.order_id, activity_type: "AI email drafted", contact_channel: "Gemini", message_summary: "Gemini generated email draft #" + n.n, outcome: "Awaiting admin review" });
+      return json({ ok: true, email_id: emailId, email_number: n.n, recipient_email: lead.contact_email, email_subject: subject, email_body: emailBody }, 201);
+    }
+
     if (route[0] === "emails" && route.length === 1 && method === "GET") {
       const result = await db.prepare(`SELECT e.*, l.company_name, l.contact_name FROM emails e
         LEFT JOIN leads l ON l.lead_id=e.lead_id ORDER BY e.created_at DESC LIMIT 300`).all();
