@@ -12,6 +12,7 @@
     return data;
   }
   const payload = (form) => Object.fromEntries(new FormData(form).entries());
+  const orderStatusLabel = (value) => ({ "Needs Details":"نیازمند تکمیل اطلاعات", "Quotation":"پیش‌فاکتور", "Confirmed":"تأییدشده", "Production":"در حال تولید", "Completed":"تکمیل‌شده", "Cancelled":"لغوشده" }[value] || value || "—");
   function showAuth() { $("authScreen").hidden=false; $("appContent").hidden=true; $("logoutBtn").hidden=true; }
   function showApp(user) { $("authScreen").hidden=true; $("appContent").hidden=false; $("logoutBtn").hidden=false; $("adminUser").textContent=user?.username||"مدیر"; activateTab(state.tab); loadOverview().catch(e=>toast(e.message,true)); }
   function activateTab(tab) {
