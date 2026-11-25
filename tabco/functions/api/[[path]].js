@@ -292,7 +292,7 @@ export async function onRequest({ request, env }) {
         "Related request/order: " + JSON.stringify(order ? {id:order.order_id,product:order.product,quantity:order.quantity,unit:order.unit,status:order.order_status,notes:order.notes} : null),
         "Requested email sequence number: " + String((await db.prepare("SELECT COALESCE(MAX(email_number),0)+1 AS n FROM emails WHERE lead_id=?").bind(leadId).first())?.n || 1)
       ].join("\n\n");
-      const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + encodeURIComponent(geminiKey), {
+      const response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=" + encodeURIComponent(geminiKey), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
