@@ -118,6 +118,21 @@
   $("closeOrderEditor").onclick=$("cancelOrder").onclick=()=>{$("orderEditor").hidden=true;};
   $("orderForm").onsubmit=async e=>{e.preventDefault();const data=payload(e.currentTarget);try{const path=state.editingOrder?"orders/"+encodeURIComponent(state.editingOrder):"orders";await api(path,{method:state.editingOrder?"PATCH":"POST",body:JSON.stringify(data)});toast("اطلاعات سفارش در D1 ذخیره شد.");$("orderEditor").hidden=true;await loadOrders();await loadOverview();}catch(err){$("orderStatus").textContent=err.message;toast(err.message,true);}};
   $("newEmailBtn").onclick=async()=>{try{await loadLeadOptions();openEmailEditor(null);}catch(e){toast(e.message,true);}};
+  $("generateEmailBtn").onclick=async()=>{
+    const leadId=$("emailLead").value;
+    if(!leadId){toast("ابتدا مشتری را انتخاب کن.",true);return;}
+    const btn=$("generateEmailBtn"), status=$("emailAiStatus");
+    btn.disabled=true;status.textContent="Gemini در حال نوشتن پیش‌نویس است…";
+    try{
+      const d=await api("emails/generate",{method:"POST",body:JSON.stringify({lead_id:leadId})});
+      await loadEmails();
+      const email=state.emails.find(x=>x.email_id===d.email_id)||d;
+      openEmailEditor(email);
+      status.textContent="پیش‌نویس با Gemini تولید و در D1 ذخیره شد؛ می‌توانی ویرایشش کنی.";
+      toast("پیش‌نویس Gemini آماده شد.");
+    }catch(err){status.textContent=err.message;toast(err.message,true);}
+    finally{btn.disabled=false;}
+  };
   $("closeEmailEditor").onclick=$("cancelEmail").onclick=()=>{$("emailEditor").hidden=true;};
   $("emailLead").onchange=()=>{const l=state.leads.find(x=>x.lead_id===$("emailLead").value);$("emailRecipient").value=l?.contact_email||"";};
   $("emailForm").onsubmit=async e=>{e.preventDefault();const data=payload(e.currentTarget);try{if(state.editingEmail)await api("emails/"+encodeURIComponent(state.editingEmail),{method:"PATCH",body:JSON.stringify(data)});else await api("emails",{method:"POST",body:JSON.stringify(data)});toast("پیش‌نویس در D1 ذخیره شد.");$("emailEditor").hidden=true;await loadEmails();await loadOverview();}catch(err){toast(err.message,true);}};
