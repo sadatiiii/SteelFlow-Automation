@@ -133,21 +133,6 @@
 </section>
 <div class="p2-footer">TABCO · پرونده تحلیلی فاز دوم · فرضیه‌ها از داده‌های تأییدشده تفکیک شده‌اند. این صفحه جایگزین تأیید فنی و تجاری اطلاعات محصول نیست.</div>
 </main>
-<script>
-(() => {
- const ids=["p2-count","p2-before","p2-after","p2-rate"];
- const nodes=ids.map(id=>document.getElementById(id));
- const output=document.getElementById("p2-output");
- const fmt=n=>new Intl.NumberFormat("fa-IR",{maximumFractionDigits:1}).format(n);
- function calc(){
-  const [count,before,after,rate]=nodes.map(n=>Math.max(0,Number(n.value)||0));
-  const savedMinutes=count*Math.max(0,before-after);
-  const hours=savedMinutes/60;
-  const value=hours*rate;
-  output.textContent="زمان برآوردی آزادشده: "+fmt(savedMinutes)+" دقیقه در ماه ("+fmt(hours)+" ساعت). ارزش زمانی برآوردی: "+fmt(value)+" واحد پولی در ماه. این نتیجه فقط به ورودی‌های شما وابسته است و باید با ثبت زمان واقعی سنجیده شود.";
- }
- nodes.forEach(n=>n.addEventListener("input",calc));calc();
-})();
-</script>
+<script src="phase2.js"></script>
 <script src="script.js"></script>
 </body></html>
