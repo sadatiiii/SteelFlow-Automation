@@ -1,15 +1,16 @@
 # TABCO — Digital Product Inquiry MVP
 
-**Academic project · Phase 1 business analysis and minimum viable product**
+**Academic project · Phase 1 and Phase 2 business analysis and minimum viable product**
 
 TABCO is an industrial B2B product presentation and inquiry workflow for a manufacturer of special square bars used in the grating industry. The project digitizes the first part of the buyer journey: learning about the product, reviewing available specifications, and submitting a structured collaboration or purchase inquiry.
 
-> This repository contains the static website source. The Python automation API is included under `automation/` and is designed to run in Docker. Cloudflare Pages Functions proxy browser requests to that API.
+The public site is served from `tabco/` using Cloudflare Pages. Server-side API routes are implemented as Cloudflare Pages Functions under `tabco/functions/` and use the D1 binding `DB` for the current admin CRM and inquiry records. Older Python automation components remain in the repository as separate/legacy automation code and are not the active D1 admin API.
 
 ## Live project
 
 - Website: https://tabcoyazd.ir/
-- Business analysis: https://tabcoyazd.ir/analysis.html
+- Phase 1 analysis: https://tabcoyazd.ir/analysis.html
+- Phase 2 analysis: https://tabcoyazd.ir/phase2.html
 - Source code: https://github.com/sadatiiii/SteelFlow-Automation
 
 ## Business problem and value proposition
@@ -33,43 +34,37 @@ The project is best classified as an **adaptive idea**: it applies existing web 
 | Product media | Local product video and logo assets |
 | Inquiry form | Dedicated bilingual first-party page at `/inquiry/` |
 | Theme and language | Dark/light theme and Persian/English language controls, including the inquiry page |
-| Analysis dossier | Separate Persian page at `tabco/analysis.html` |
-| Demo order panel | Browser-local `localStorage` example; not a central order system |
+| Analysis dossiers | Persian Phase 1 and Phase 2 pages at `/analysis.html` and `/phase2.html` |
+| Admin CRM | Cloudflare Pages Functions + Cloudflare D1 (leads, orders, emails, activity log) |
+| Admin authentication | Session cookie backed by D1 admin users and sessions |
 | Privacy page | Basic explanation of form data and third-party processing |
 
-## Python automation workflow
-
-The implemented flow is:
+## Current Cloudflare workflow
 
 ```text
 Buyer
   |
   v
-TABCO product page -> bilingual inquiry page
+TABCO product page -> dedicated inquiry page
   |
   v
-Cloudflare Pages Function -> Python FastAPI (Docker)
-  |
-  +----> Google Sheets: Leads
-  |
+Cloudflare Pages Function -> D1
+  |                     |
+  |                     +--> create/reuse Lead
+  |                     +--> create a separate Order for every inquiry
+  |                     +--> write activity log
   v
-Admin selects an eligible lead
+Admin panel (authenticated session)
   |
-  v
-Gemini creates an editable draft -> Google Sheets: Emails
-  |
-  v
-Human reviews and edits the draft
-  |
-  v
-Explicit send approval -> SMTP -> update both Sheets tabs
+  +--> review leads and orders
+  +--> Gemini prepares an editable email draft
+  +--> admin reviews/edits the draft
+  +--> explicit confirmation before Gmail send
 ```
 
-The API source is version-controlled in this repository. Runtime behavior still depends on configuring Google service-account access, a Gemini API key, SMTP credentials, an admin token, and a running Docker host. Those secrets are not committed.
+The active admin API is `tabco/functions/api/[[path]].js`. The inquiry endpoint is `tabco/functions/api/inquiries.js`. The D1 schema is documented in `cloudflare/migrations/0001_initial_schema.sql`. Gemini uses `GEMINI_API_KEY`; Gmail sending uses Google OAuth credentials and a refresh token. These are Cloudflare secrets and must never be committed.
 
-Google Sheets is used as the external structured record store. **This project does not currently implement a dedicated relational database.**
-
-The AI-assisted step prepares an editable draft. The admin page at `/admin/email-drafts.html` saves edits and requires a separate explicit confirmation before sending.
+The Phase 2 dossier describes the intended business model and workflow. The live integrations still require end-to-end testing in the deployed environment; source-code presence alone does not prove that external credentials, quotas, OAuth, or delivery are working.
 
 ## Online and offline boundary
 
@@ -123,13 +118,11 @@ Then open:
 - http://localhost:8000/
 - http://localhost:8000/analysis.html
 
-The inquiry form requires the Python API to be running and configured with Google Sheets access.
+The inquiry form requires the Cloudflare Pages Functions deployment and the D1 binding to be configured.
 
 ## Deployment notes
 
-The static website and Python API are deployed separately. The static site root is the `tabco/` directory. The Python API includes a Dockerfile; the static site remains build-step-free. Keep the existing Cloudflare Pages root directory (`tabco/`) when publishing changes. Keep the existing hosting configuration when publishing changes.
-
-Set `AUTOMATION_API_ORIGIN` in Cloudflare Pages to the base URL of the Docker API. Configure `GOOGLE_SERVICE_ACCOUNT_JSON`, `GOOGLE_SHEET_ID`, `GEMINI_API_KEY`, `ADMIN_TOKEN`, and SMTP values as secrets on the API host. Never put these credentials in frontend files.
+The static site and Pages Functions are deployed together from the existing Cloudflare Pages project. Preserve its current build/output configuration. Configure the D1 database binding named `DB` and the required secrets in Cloudflare Pages: `ADMIN_SETUP_KEY`, `GEMINI_API_KEY`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI`, and `GOOGLE_REFRESH_TOKEN` as applicable. Never put credentials in frontend files or Git history.
 
 ## Known limitations and risks
 
@@ -141,9 +134,11 @@ Set `AUTOMATION_API_ORIGIN` in Cloudflare Pages to the base URL of the Docker AP
 - Availability, pricing, production lead time, shipping, and final technical suitability require direct confirmation.
 - Third-party workflow, email, spreadsheet, and AI services introduce availability and configuration dependencies.
 
-## Phase 1 presentation
+## Phase 1 and Phase 2 presentation
 
-The public analysis dossier is available at `/analysis.html`. It covers:
+The Phase 1 dossier is available at `/analysis.html`; the Phase 2 dossier is available at `/phase2.html`. Phase 2 covers the formulated value proposition, transaction-cost analysis, intermediary functions, disintermediation, nine-block Business Model Canvas, revenue architecture, substitute analysis, connected MVP scenarios, error/empty states, and an assumption-based time-savings calculator. It explicitly labels missing market evidence instead of inventing it.
+
+Phase 1 covers:
 
 1. Business introduction and value proposition.
 2. Customer problem and friction hypotheses.
