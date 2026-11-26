@@ -23,5 +23,6 @@ jobs:
         run: |
           node --check tabco/script.js
           node --check tabco/inquiry/inquiry.js
-          node --check tabco/admin/drafts.js
+          node --check tabco/admin/admin.js
+          node --check tabco/phase2.js
           node --check 'tabco/functions/api/[[path]].js'
