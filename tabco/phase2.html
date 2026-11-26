@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101714">
+<title>تحلیل فاز دوم | TABCO</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+.p2-wrap{max-width:1180px;margin:auto;padding:34px 22px 80px}.p2-hero{padding:34px;border:1px solid var(--line,#ffffff20);border-radius:22px;background:var(--surface,rgba(255,255,255,.04));margin:28px 0}.p2-hero h1{font-size:clamp(2rem,4vw,3.4rem);line-height:1.4}.p2-section{margin:44px 0}.p2-section h2{font-size:1.8rem;margin-bottom:12px}.p2-muted{opacity:.78;line-height:2}.p2-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.p2-card{padding:20px;border:1px solid var(--line,#ffffff20);border-radius:16px;background:var(--surface,rgba(255,255,255,.035));line-height:2}.p2-card h3{margin:0 0 8px;font-size:1.08rem}.p2-tag{display:inline-block;padding:3px 10px;border-radius:30px;background:rgba(201,243,106,.12);color:var(--accent,#c9f36a);font-size:.82rem;margin-bottom:10px}.p2-table{width:100%;border-collapse:collapse;line-height:1.9}.p2-table th,.p2-table td{padding:12px;border-bottom:1px solid var(--line,#ffffff20);text-align:right;vertical-align:top}.p2-table th{opacity:.8}.p2-canvas{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}.p2-canvas .p2-card{min-height:160px}.p2-canvas .wide{grid-column:span 2}.p2-flow{display:flex;align-items:stretch;gap:8px;flex-wrap:wrap}.p2-flow span{flex:1;min-width:130px;padding:14px;border:1px solid var(--line,#ffffff25);border-radius:12px;text-align:center}.p2-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-top:18px}.p2-form label{display:grid;gap:6px}.p2-form input{width:100%;padding:12px;border:1px solid var(--line,#ffffff35);border-radius:10px;background:transparent;color:inherit;font:inherit}.p2-result{margin-top:16px;padding:16px;border-radius:12px;background:rgba(201,243,106,.1);line-height:2}.p2-note{border-right:3px solid var(--accent,#c9f36a);padding:12px 16px;background:rgba(201,243,106,.06);line-height:2;margin:16px 0}.p2-footer{margin-top:50px;padding-top:20px;border-top:1px solid var(--line,#ffffff20);opacity:.75;font-size:.9rem}@media(max-width:800px){.p2-canvas{grid-template-columns:repeat(2,minmax(0,1fr))}.p2-canvas .wide{grid-column:span 1}.p2-table{font-size:.9rem;display:block;overflow-x:auto}}
+</style>
+</head>
+<body data-page="phase2">
+<header class="topbar glass">
+<a class="brand" href="index.html"><img src="assets/logo.jpeg" alt="لوگوی تابکو" class="logo"><div><strong>TABCO<span class="brand-dot">.</span></strong><p class="tagline">پرونده تحلیلی فاز دوم</p></div></a>
+<nav class="nav"><a href="index.html">صفحه اصلی و MVP</a><a href="analysis.html">تحلیل فاز اول</a><a href="#canvas">بوم کسب‌وکار</a><a href="#mvp">مسیر تراکنش</a><button id="themeToggle" class="icon-btn" type="button" aria-label="تغییر تم"><span id="themeIcon">☼</span></button></nav>
+</header>
+<main class="p2-wrap">
+<section class="p2-hero">
+<span class="p2-tag">PHASE 02 · BUSINESS MODEL & MVP</span>
+<h1>از معرفی محصول تا <span>فرایند قابل پیگیری فروش صنعتی</span></h1>
+<p class="p2-muted">فاز دوم TABCO بر طراحی مدل کسب‌وکار، روشن‌کردن نقش واسطه‌ای کانال دیجیتال و تکمیل مسیر درخواست تا پیگیری متمرکز است. این پروژه بازارگاه چندفروشنده نیست؛ کانال دیجیتال متعلق به تولیدکننده/تأمین‌کننده است و نقش آن کاهش اصطکاک ارتباط و ثبت درخواست است.</p>
+<div class="p2-note"><strong>مرز شواهد:</strong> اطلاعات محصول و قابلیت‌های نرم‌افزار از داده‌های موجود پروژه گرفته شده‌اند. اندازه بازار، قیمت، حاشیه سود، نرخ تبدیل، صرفه‌جویی زمانی و عملکرد رقبا هنوز داده میدانی تأییدشده ندارند؛ موارد فاقد داده به‌عنوان فرضیه یا ورودی قابل اندازه‌گیری مشخص شده‌اند.</div>
+</section>
+
+<section class="p2-section" id="value">
+<h2>۱. گزاره ارزش پیشنهادی فرمول‌بندی‌شده</h2>
+<div class="p2-card"><span class="p2-tag">Value Proposition</span>
+<p><strong>برای خریداران صنعتی گریتینگ</strong> که پیش از مذاکره به اطلاعات اولیه محصول و راهی روشن برای اعلام نیاز نیاز دارند، TABCO یک کانال دیجیتال مستقیم فراهم می‌کند تا مشخصات محصول را یک‌جا ببینند و درخواست خود را با اطلاعات تماس و جزئیات پروژه ثبت کنند؛ در نتیجه اطلاعات اولیه ساختاریافته‌تر به تیم فروش می‌رسد و پیگیری هر درخواست قابل ردیابی می‌شود.</p>
+<p><strong>برای TABCO</strong> این فرایند، اطلاعات ورودی را استانداردتر می‌کند، ایجاد رکورد درخواست و پیگیری را منظم می‌سازد و امکان آماده‌سازی پیش‌نویس مکاتبه با بازبینی انسانی را فراهم می‌کند.</p></div>
+</section>
+
+<section class="p2-section" id="utility">
+<h2>۲. ارزش کاربردی و هزینه مبادله</h2>
+<div class="p2-grid">
+<article class="p2-card"><h3>کاهش هزینه جست‌وجو</h3><p>خریدار برای مشاهده اطلاعات پایه، ابعاد اعلام‌شده و راه ارتباطی مجبور نیست از ابتدا از چند کانال سؤال کند.</p></article>
+<article class="p2-card"><h3>کاهش هزینه اطلاعات</h3><p>فرم ساختاریافته نام شرکت، راه تماس و توضیحات اولیه را در یک درخواست جمع می‌کند؛ فیلدهای ناقص همچنان نیازمند تکمیل انسانی‌اند.</p></article>
+<article class="p2-card"><h3>کاهش هزینه هماهنگی</h3><p>ثبت درخواست، ایجاد رکورد مستقل و تاریخچه فعالیت می‌تواند رفت‌وبرگشت‌های پراکنده را کمتر کند؛ میزان کاهش باید اندازه‌گیری شود.</p></article>
+<article class="p2-card"><h3>کاهش ریسک ابهام</h3><p>نمایش صریح اطلاعات معلوم و نامعلوم، از برداشت اشتباه درباره قیمت، موجودی، زمان تحویل یا مشخصات تأییدنشده جلوگیری می‌کند.</p></article>
+</div>
+<p class="p2-note">هزینه مبادله در این تحلیل شامل زمان جست‌وجو، جمع‌آوری اطلاعات، مذاکره و هماهنگی، بررسی اعتبار و پیگیری است. هیچ درصد صرفه‌جویی از پیش فرض نشده است؛ ماشین‌حساب پایین فقط بر اساس ورودی‌های کاربر برآورد می‌کند.</p>
+</section>
+
+<section class="p2-section" id="intermediary">
+<h2>۳. چهار کارکرد واسطه و مسئله دور زدن پلتفرم</h2>
+<div class="p2-grid">
+<article class="p2-card"><h3>۱) تجمیع اطلاعات (Aggregation)</h3><p>معرفی محصول، ابعاد اعلام‌شده، راه تماس و فرم درخواست در یک نقطه جمع می‌شوند.</p></article>
+<article class="p2-card"><h3>۲) تطبیق (Matching)</h3><p>اطلاعات نیاز خریدار در فرم ثبت می‌شود تا تیم فروش بتواند درخواست را با محصول، ظرفیت و امکان تولید بررسی کند. تطبیق نهایی انسانی است.</p></article>
+<article class="p2-card"><h3>۳) اعتماد و کاهش عدم‌تقارن اطلاعات</h3><p>نمایش هویت تجاری و اطلاعات مشخص محصول، ثبت درخواست و امکان پیگیری، شفافیت اولیه ایجاد می‌کند؛ تضمین کیفیت یا اعتبارسنجی مستقل ادعا نشده است.</p></article>
+<article class="p2-card"><h3>۴) تسهیل مبادله (Facilitation)</h3><p>ثبت درخواست، ساخت رکورد سفارش، ثبت فعالیت و آماده‌سازی پیش‌نویس ایمیل، مراحل اداری آغاز همکاری را پشتیبانی می‌کند. توافق و پرداخت خارج از سایت است.</p></article>
+</div>
+<div class="p2-card" style="margin-top:14px"><h3>آیا دور زدن پلتفرم تهدید است؟</h3><p>چون TABCO بازارگاه مستقل و چندطرفه نیست و خریدار مستقیماً با عرضه‌کننده ارتباط می‌گیرد، «دور زدن پلتفرم» به معنای کلاسیک بازارگاه مسئله اصلی نیست. بااین‌حال پس از معرفی اولیه ممکن است ادامه تعامل خارج از وب‌سایت انجام شود. ارزش ماندگار کانال باید در سوابق درخواست، نسخه‌های مکاتبه، وضعیت پیگیری، پاسخ‌گویی و خدمات پس از فروش باشد؛ نه قفل‌کردن اطلاعات تماس یا جلوگیری مصنوعی از ارتباط مستقیم.</p></div>
+</section>
+
+<section class="p2-section" id="canvas">
+<h2>۴. بوم مدل کسب‌وکار (۹ بخش)</h2>
+<div class="p2-canvas">
+<article class="p2-card"><h3>شرکای کلیدی</h3><p>تأمین‌کنندگان مواد اولیه، شرکت‌های حمل‌ونقل، ارائه‌دهندگان میزبانی و خدمات ایمیل/هوش مصنوعی. فهرست و شرایط واقعی شرکا باید تأیید شود.</p></article>
+<article class="p2-card"><h3>فعالیت‌های کلیدی</h3><p>تولید و کنترل کیفیت، معرفی محصول، پاسخ به استعلام، بررسی فنی، مذاکره، ثبت و پیگیری درخواست‌ها.</p></article>
+<article class="p2-card"><h3>منابع کلیدی</h3><p>ماشین‌آلات و ظرفیت تولید، دانش فنی، نیروی انسانی، برند و اطلاعات محصول، وب‌سایت و سامانه ثبت درخواست.</p></article>
+<article class="p2-card"><h3>ارزش پیشنهادی</h3><p>اطلاعات اولیه روشن، ثبت ساختاریافته نیاز و پیگیری منظم‌تر برای خرید B2B چارپهلوی گریتینگ.</p></article>
+<article class="p2-card"><h3>ارتباط با مشتری</h3><p>ارتباط مستقیم B2B، بررسی انسانی درخواست، مکاتبه شخصی‌سازی‌شده، مذاکره و پیگیری پس از استعلام.</p></article>
+<article class="p2-card"><h3>کانال‌ها</h3><p>وب‌سایت TABCO، فرم استعلام، ایمیل سازمانی، تماس مستقیم و کانال‌های معرفی صنعتی.</p></article>
+<article class="p2-card"><h3>بخش‌های مشتریان</h3><p>تولیدکنندگان گریتینگ، سازندگان و پیمانکاران صنعتی و خریداران سازمانی نیازمند مواد اولیه. اولویت‌بندی این بخش‌ها نیازمند داده فروش است.</p></article>
+<article class="p2-card"><h3>ساختار هزینه</h3><p>مواد اولیه، انرژی، نیروی انسانی، استهلاک و نگهداری ماشین‌آلات، کنترل کیفیت، بسته‌بندی و حمل؛ همچنین میزبانی و خدمات دیجیتال.</p></article>
+<article class="p2-card"><h3>جریان‌های درآمدی</h3><p>فروش محصول بر اساس توافق تجاری، سفارش‌های حجمی و قراردادهای تأمین تکرارشونده در صورت توافق طرفین. قیمت و حاشیه سود در این پروژه مستند نشده‌اند.</p></article>
+</div>
+</section>
+
+<section class="p2-section" id="revenue">
+<h2>۵. معماری جریان درآمدی و منطق آن</h2>
+<div class="p2-grid">
+<article class="p2-card"><h3>جریان اصلی: فروش محصول</h3><p>درآمد از فروش چارپهلوی ویژه گریتینگ حاصل می‌شود. مقدار، قیمت واحد، شرایط پرداخت و هزینه حمل در مرحله استعلام و مذاکره تعیین می‌شوند؛ وب‌سایت قیمت ساختگی نمایش نمی‌دهد.</p></article>
+<article class="p2-card"><h3>سفارش‌های حجمی</h3><p>برای سفارش‌های بزرگ، قیمت‌گذاری و برنامه تحویل می‌تواند بر اساس مقدار و شرایط واقعی تولید بررسی شود. تخفیف یا ظرفیت تضمین‌شده فرض نشده است.</p></article>
+<article class="p2-card"><h3>تأمین تکرارشونده</h3><p>در صورت رضایت و توافق، همکاری دوره‌ای یا قرارداد تأمین ممکن است درآمد تکرارشونده ایجاد کند. این جریان هنوز قرارداد اثبات‌شده پروژه نیست.</p></article>
+</div>
+<p class="p2-note">درآمدزایی از اشتراک پلتفرم، تبلیغات یا کارمزد بازارگاه با مدل فعلی سازگار نیست؛ TABCO کانال فروش تولیدکننده است و نه بازارگاه چندفروشنده.</p>
+</section>
+
+<section class="p2-section" id="alternatives">
+<h2>۶. رقبا و جایگزین‌های فعلی مشتری</h2>
+<p class="p2-muted">در مخزن پروژه داده مستندی از نام و عملکرد سه رقیب مستقیم وجود ندارد. برای پرهیز از ساختن اطلاعات، مقایسه زیر سه گروه جایگزین فرایندی را بررسی می‌کند؛ این‌ها «رقیب نام‌برده و راستی‌آزمایی‌شده» نیستند.</p>
+<div style="overflow-x:auto"><table class="p2-table"><thead><tr><th>جایگزین</th><th>نقطه قوت</th><th>اصطکاک/محدودیت محتمل</th><th>پاسخ TABCO</th></tr></thead><tbody>
+<tr><td>تماس تلفنی و ارتباط مستقیم</td><td>تعامل سریع و امکان پرسش‌وپاسخ</td><td>جزئیات ممکن است در یادداشت‌های شخصی بماند و ثبت ساختاریافته نباشد</td><td>فرم استاندارد در کنار امکان تماس مستقیم</td></tr>
+<tr><td>ایمیل و پیام‌رسان‌ها</td><td>ارسال فایل و ادامه مکاتبه آسان</td><td>اطلاعات بین رشته‌ها و افراد پراکنده می‌شود؛ پیگیری دستی است</td><td>رکورد متمرکز درخواست و ثبت فعالیت</td></tr>
+<tr><td>کاتالوگ‌ها و دایرکتوری‌های صنعتی/واسطه‌ها</td><td>امکان کشف چند تأمین‌کننده یا محصول</td><td>اطلاعات ممکن است عمومی یا نیازمند تماس مجدد باشد؛ صحت و به‌روزبودن باید بررسی شود</td><td>اطلاعات مستقیم عرضه‌کننده و ثبت درخواست مرتبط</td></tr>
+</tbody></table></div>
+<div class="p2-note">برای تبدیل این بخش به تحلیل رقابتی نهایی، باید حداقل سه شرکت واقعی در بازار هدف انتخاب و با شواهد قابل استناد از وب‌سایت، محصولات، بازار جغرافیایی، کانال استعلام و شرایط خدمات مقایسه شوند. این اطلاعات فعلاً در مخزن موجود نیست.</div>
+</section>
+
+<section class="p2-section" id="mvp">
+<h2>۷. سناریوهای فاز دوم متصل به فاز اول</h2>
+<div class="p2-flow"><span>آگاهی و مشاهده محصول</span><span>ثبت درخواست در فرم</span><span>اعتبارسنجی و ذخیره در D1</span><span>ایجاد Order مستقل</span><span>بررسی و تکمیل جزئیات</span><span>پیگیری و مکاتبه</span></div>
+<div class="p2-grid" style="margin-top:14px">
+<article class="p2-card"><h3>سناریوی خریدار جدید</h3><p>مشتری صفحه محصول را می‌بیند، درخواست می‌فرستد، ورودی‌ها اعتبارسنجی می‌شوند، Lead در صورت جدیدبودن ایجاد و برای هر ارسال فرم یک Order مجزا ثبت می‌شود.</p></article>
+<article class="p2-card"><h3>سناریوی مشتری قبلی</h3><p>اگر ایمیل متعلق به Lead موجود باشد، همان Lead دوباره استفاده می‌شود اما درخواست جدید همچنان Order مستقل دارد؛ درخواست‌ها با هم ادغام یا حذف نمی‌شوند.</p></article>
+<article class="p2-card"><h3>سناریوی اطلاعات ناقص</h3><p>درخواست با وضعیت نیازمند تکمیل قابل بررسی است؛ کارشناس باید جزئیات محصول، مقدار و واحد را با مشتری روشن کند و نباید مقادیر حدسی ثبت کند.</p></article>
+<article class="p2-card"><h3>سناریوی پاسخ‌گویی</h3><p>کارشناس درخواست را بررسی می‌کند، پیش‌نویس ایمیل می‌سازد، متن را بازبینی و ویرایش می‌کند و فقط با تأیید صریح اقدام به ارسال می‌کند.</p></article>
+</div>
+<h3 style="margin-top:26px">مدیریت خطا و حالت‌های خالی مورد انتظار</h3>
+<ul class="p2-muted">
+<li>فیلدهای ضروری خالی یا ایمیل نامعتبر: نمایش خطای قابل فهم و جلوگیری از ثبت.</li>
+<li>JSON نامعتبر یا بدنه بیش از حد: پاسخ 400 یا 413.</li>
+<li>قطع D1 یا سرویس بیرونی: پیام شکست روشن؛ عدم نمایش موفقیت کاذب.</li>
+<li>فهرست بدون Lead، Order یا Email: نمایش حالت خالی و راهنمای اقدام بعدی.</li>
+<li>Gemini در دسترس نیست: پیش‌نویس ذخیره نشود و امکان تلاش مجدد حفظ شود.</li>
+<li>Gmail مجوز ندارد یا ارسال شکست می‌خورد: وضعیت ارسال به‌عنوان موفق ثبت نشود.</li>
+<li>ارسال ایمیل فقط پس از بازبینی انسانی و تأیید صریح انجام شود.</li>
+</ul>
+</section>
+
+<section class="p2-section" id="calculator">
+<h2>۸. ماشین‌حساب برآورد صرفه‌جویی زمانی</h2>
+<p class="p2-muted">اعداد زیر را خودت وارد کن. خروجی یک برآورد سناریویی است، نه نتیجه اندازه‌گیری‌شده و نه پیش‌بینی قطعی.</p>
+<div class="p2-card">
+<div class="p2-form">
+<label>تعداد درخواست در ماه<input id="p2-count" type="number" min="0" step="1" value="20"></label>
+<label>دقیقه کار دستی برای هر درخواست<input id="p2-before" type="number" min="0" step="1" value="18"></label>
+<label>دقیقه کار با فرایند دیجیتال<input id="p2-after" type="number" min="0" step="1" value="8"></label>
+<label>ارزش هر ساعت کار (واحد پول دلخواه)<input id="p2-rate" type="number" min="0" step="1000" value="0"></label>
+</div>
+<div class="p2-result" aria-live="polite" id="p2-output">در حال محاسبه…</div>
+</div>
+</section>
+
+<section class="p2-section">
+<h2>۹. داده‌های لازم برای اعتبارسنجی و تحویل نهایی</h2>
+<div class="p2-grid">
+<article class="p2-card"><h3>بازار</h3><p>مصاحبه با خریداران هدف، تعداد درخواست‌های واقعی، بازار جغرافیایی و معیار انتخاب تأمین‌کننده.</p></article>
+<article class="p2-card"><h3>رقابت</h3><p>سه رقیب مستقیم نام‌دار، لینک منابع اولیه، مقایسه ابعاد، کاربرد، خدمات و مسیر استعلام.</p></article>
+<article class="p2-card"><h3>اقتصاد</h3><p>قیمت فروش، هزینه متغیر، هزینه ثابت، هزینه حمل، حاشیه مشارکت و نقطه سربه‌سر؛ بدون حدس.</p></article>
+<article class="p2-card"><h3>عملکرد MVP</h3><p>تست واقعی ثبت فرم، ثبت D1، ایجاد سفارش، حالت خطا، پیش‌نویس، بازبینی و ارسال آزمایشی کنترل‌شده.</p></article>
+</div>
+</section>
+<div class="p2-footer">TABCO · پرونده تحلیلی فاز دوم · فرضیه‌ها از داده‌های تأییدشده تفکیک شده‌اند. این صفحه جایگزین تأیید فنی و تجاری اطلاعات محصول نیست.</div>
+</main>
+<script>
+(() => {
+ const ids=["p2-count","p2-before","p2-after","p2-rate"];
+ const nodes=ids.map(id=>document.getElementById(id));
+ const output=document.getElementById("p2-output");
+ const fmt=n=>new Intl.NumberFormat("fa-IR",{maximumFractionDigits:1}).format(n);
+ function calc(){
+  const [count,before,after,rate]=nodes.map(n=>Math.max(0,Number(n.value)||0));
+  const savedMinutes=count*Math.max(0,before-after);
+  const hours=savedMinutes/60;
+  const value=hours*rate;
+  output.textContent="زمان برآوردی آزادشده: "+fmt(savedMinutes)+" دقیقه در ماه ("+fmt(hours)+" ساعت). ارزش زمانی برآوردی: "+fmt(value)+" واحد پولی در ماه. این نتیجه فقط به ورودی‌های شما وابسته است و باید با ثبت زمان واقعی سنجیده شود.";
+ }
+ nodes.forEach(n=>n.addEventListener("input",calc));calc();
+ const theme=document.getElementById("themeToggle");
+ if(theme) theme.addEventListener("click",()=>{document.body.classList.toggle("light-theme");});
+})();
+</script>
+</body></html>
