@@ -19,7 +19,7 @@ Industrial buyers may need to collect product information, confirm dimensions an
 
 TABCO provides a single public product page and a structured inquiry form. The intended value is clearer product discovery, more consistent initial request capture, and a more organized starting point for sales communication.
 
-**Evidence boundary:** These pain points are working business hypotheses, not quantified market findings. The repository does not contain documented customer interviews, market-size research, or measured conversion results. Field validation is a next step.
+**Evidence boundary:** These pain points are working business hypotheses, not quantified market findings. The repository does not contain documented customer interviews, market-size research, or measured conversion results. Field validation depends on access to the employer's sales, production, and customer information; it is outside the website implementer's independent control and requires the business owner's participation.
 
 ## Idea classification
 
@@ -64,7 +64,7 @@ Admin panel (authenticated session)
 
 The active admin API is `tabco/functions/api/[[path]].js`. The inquiry endpoint is `tabco/functions/api/inquiries.js`. The D1 schema is documented in `cloudflare/migrations/0001_initial_schema.sql`. Gemini uses `GEMINI_API_KEY`; Gmail sending uses Google OAuth credentials and a refresh token. These are Cloudflare secrets and must never be committed.
 
-The Phase 2 dossier describes the intended business model and workflow. The live integrations still require end-to-end testing in the deployed environment; source-code presence alone does not prove that external credentials, quotas, OAuth, or delivery are working.
+The Phase 2 dossier describes the intended business model and workflow and names three Iranian grating manufacturers as downstream competitors and potential upstream-material customers. The project owner reports that Gmail sending has been tested successfully. Market validation and commercial facts still require the business owner's participation; source-code presence alone does not prove those business assumptions.
 
 ## Online and offline boundary
 
@@ -138,7 +138,7 @@ The static site and Pages Functions are deployed together from the existing Clou
 
 ## Phase 1 and Phase 2 presentation
 
-The Phase 1 dossier is available at `/analysis.html`; the Phase 2 dossier is available at `/phase2.html`. Phase 2 covers the formulated value proposition, transaction-cost analysis, intermediary functions, disintermediation, nine-block Business Model Canvas, revenue architecture, substitute analysis, connected MVP scenarios, error/empty states, and an assumption-based time-savings calculator. It explicitly labels missing market evidence instead of inventing it.
+The Phase 1 dossier is available at `/analysis.html`; the Phase 2 dossier is available at `/phase2.html`. Phase 2 covers the formulated value proposition, transaction-cost analysis, intermediary functions, disintermediation, nine-block Business Model Canvas, revenue architecture, a researched comparison of three Iranian grating manufacturers (Azhineh Sanat Arak, Tashfa, and Dezhahan Parse), their dual role as downstream competitors and potential raw-material customers, connected MVP scenarios, error/empty states, and an assumption-based time-savings calculator. It explicitly labels unverified purchasing interest and missing market evidence instead of inventing them.
 
 Phase 1 covers:
 
