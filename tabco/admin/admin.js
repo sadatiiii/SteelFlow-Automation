@@ -105,7 +105,19 @@
     $("emailEditor").querySelector("h3").textContent=readOnly?"مشاهده ایمیل ارسال‌شده":"ویرایش پیش‌نویس";
     $("emailEditor").hidden=false;$("emailEditor").scrollIntoView({behavior:"smooth",block:"start"});
   }
-  function editEmail(id){const email=state.emails.find(e=>e.email_id===id);if(email)openEmailEditor(email);}
+  async function editEmail(id){
+    try{
+      // The email list can load before the lead list. Populate customer options
+      // before assigning the email's lead_id to the select element.
+      await loadLeadOptions();
+      const email=state.emails.find(e=>e.email_id===id);
+      if(!email)return;
+      openEmailEditor(email);
+      if(email.lead_id && $("emailLead").value!==email.lead_id){
+        toast("مشتری مرتبط با این ایمیل در فهرست مشتری‌ها پیدا نشد؛ بخش مشتری‌ها و API را بررسی کن.",true);
+      }
+    }catch(e){toast(e.message,true);}
+  }
   async function loadActivity(){
     const d=await api("activity");
     $("allActivity").innerHTML=(d.activities||[]).map(activityHtml).join("")||'<div class="empty-state">فعالیتی ثبت نشده است.</div>';
